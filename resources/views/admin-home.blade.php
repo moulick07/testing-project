@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!----======== CSS ======== -->
-    <link rel="stylesheet" href="style.css">
+    {{-- <link rel="stylesheet" href="style.css"> --}}
      
     <!----===== Iconscout CSS ===== -->
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
@@ -104,7 +104,7 @@
         </div>
     </section>
 
-    <script src="script.js"></script>
+    {{-- <script src="script.js"></script> --}}
 </body>
 <script src="{{ URL::asset('admin.js') }}"></script>
 </html>
