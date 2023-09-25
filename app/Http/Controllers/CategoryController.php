@@ -27,36 +27,117 @@ class CategoryController extends Controller
         ]);
         return back()->with('success','successfull category created ');
     }
-    public function variation(Request $request){
+    public function data(Request $request){
         $categories= Category::all();
 
         if ($request->ajax()) {
             // dd($request);
-            $data = Category::all();
+            $data = Category::select('*');
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function($row){
-                    $actionBtn = '<a href="javascript:void(0)" data-id="'.$row->id.'" class="edit btn btn-success btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm">Delete</a>';
-                    return $actionBtn;
-                })
-                ->rawColumns(['action'])
-                ->make(true);
+                    
+                    // Update Button
+                    $updateButton = "<a href=detailCategory/".$row->id."> <button class='btn btn-sm btn-info updateUser' ><i class='fa fa-eye'></i></button></a>";
+   
+                    // Delete Button
+                    // $deleteButton = "<button class='btn btn-sm btn-danger deleteUser' data-id='".$row->id."'><i class='fa-solid fa-trash'></i></button>";
+   
+                    return $updateButton;
+   
+               }) 
+               ->make(true);
+                
         }
 
         return view('variations')->with('categories',$categories);
      
     }
 
-    public function editVariation(Request $request)
-    {
-     
-        $Categories = Category::findOrFail($request->id);
-        return response()->json($Categories);
+  
+     // Read Employee record by ID
+     public function getCategoryData(Request $request){
+
+        ## Read POST data 
+        $id = $request->post('id');
+
+        $empdata = Category::find($id);
+
+        $response = array();
+        if(!empty($empdata)){
+
+            $response['title'] = $empdata->title;
+            $response['description'] = $empdata->description;
+            $response['is_parent'] = $empdata->is_parent;
+            $response['parent_category'] = $empdata->parent_category;
+
+            $response['success'] = 1;
+        }else{
+            $response['success'] = 0;
+        }
+
+        return response()->json($response);
+
+    }
+    public function detailCategoryData($id){
+        $detailcategory = Category::where('id',$id)->get();
+        // dd($cat);
+        ## Read POST 
+        return view('categorydetail',compact('detailcategory'));
+
     }
 
-     public function update(Request $request)
-    {
-        dd($request);
-        //validation
+    // Update Category record
+    public function updateCategory(Request $request){
+        ## Read POST data
+        $id = $request->post('id');
+
+        $empdata = Category::find($id);
+
+        $response = array();
+        if(!empty($empdata)){
+             $updata['title'] = $request->post('title');
+             $updata['description'] = $request->post('description');
+             $updata['is_parent'] = $request->post('is_parent');
+             $updata['parent_category'] = $request->post('parent_category');
+
+             if($empdata->update($updata)){
+                  $response['success'] = 1;
+                  $response['msg'] = 'Update successfully'; 
+             }else{
+                  $response['success'] = 0;
+                  $response['msg'] = 'Record not updated';
+             }
+
+        }else{
+             $response['success'] = 0;
+             $response['msg'] = 'Invalid ID.';
         }
+
+        return response()->json($response); 
+    }
+
+    // Delete Employee
+    public function deleteCategory(Request $request){
+
+        ## Read POST data
+        $id = $request->post('id');
+
+        $empdata = Category::find($id);
+
+        if($empdata->delete()){
+            $response['success'] = 1;
+            $response['msg'] = 'Delete successfully'; 
+        }else{
+            $response['success'] = 0;
+            $response['msg'] = 'Invalid ID.';
+        }
+
+        return response()->json($response); 
+    }
+
+    public function addVariation(){
+
+        return  view('addvariation');
+    }
 }

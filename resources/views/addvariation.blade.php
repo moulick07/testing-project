@@ -72,15 +72,10 @@
         }
     </style>
     <!----===== Iconscout CSS ===== -->
+    <!------ Include the above in your HEAD tag ---------->
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
-    <link rel="stylesheet" href="form.css">
-
-
-    <!-- Inline CSS based on choices in "Settings" tab -->
-
-
     <link href="{{ URL::asset('admin.css') }}" rel="stylesheet" type="text/css" />
-
+    
     <title>Admin Panel</title>
 </head>
 
@@ -91,7 +86,7 @@
                 <img src="images/logo.png" alt="">
             </div>
 
-            <span class="logo_name">Category</span>
+            <span class="logo_name">CodingLab</span>
         </div>
 
         <div class="menu-items">
@@ -104,7 +99,7 @@
                         <i class="uil uil-files-landscapes"></i>
                         <span class="link-name">Product</span>
                     </a></li>
-                <li><a href="{{ route('getCategorydata') }}">
+                <li><a href="{{ route('category') }}">
                         <i class="uil uil-chart"></i>
                         <span class="link-name">Category</span>
                     </a></li>
@@ -130,35 +125,33 @@
             </ul>
         </div>
     </nav>
+
     <section class="dashboard">
         <div class="top">
             <i class="uil uil-bars sidebar-toggle"></i>
-           
+
+            <div class="search-box">
+                <i class="uil uil-search"></i>
+                <input type="text" placeholder="Search here...">
+            </div>
+
             <!--<img src="images/profile.jpg" alt="">-->
         </div>
-
-
 
         <div class="dash-content">
             <div class="overview">
                 <div class="title">
                     <i class="uil uil-tachometer-fast-alt"></i>
-                    <div class="row d-flex justify-content-between">
-                        <div class="col-6 d-flex">
+                    <span class="text">Dashboard</span>
+                </div>
 
-                            <span class="text">Category page</span>
-                        </div>
-
-                        
+                <div class="row">
+                    <div class="col-12">
+                        <a href="" class="btn ">Category Detail</a>
+                        <a href="{{ route('addVariation') }}" class="btn ">Add Variation</a>
                     </div>
                 </div>
-               
 
-                      
-
-                        
-                 
-             
                 <form id="form" action="{{ route('save-category') }}">
                     <h2>Add Category </h2>
 
@@ -202,10 +195,10 @@
                         <select name="parent-cat" id="role">
                             <option value="0">None</option>
 
-                            @foreach ($categories as $parentCategory)
+                            {{-- @foreach ($categories as $parentCategory)
                                 <option value="{{ $parentCategory->id }}">
                                     {{ $parentCategory->title }}</option>
-                            @endforeach
+                            @endforeach --}}
                         </select>
                     </div>
                     <!-- Multi-line Text Input Control -->
@@ -216,10 +209,14 @@
                         view all Category 
                     </button></a>
                 </form>
+                    
             </div>
         </div>
     </section>
+
+    {{-- <script src="script.js"></script> --}}
 </body>
+<script src="{{ URL::asset('admin.js') }}"></script>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
     integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
 </script>
@@ -229,6 +226,4 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
     integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
 </script>
-<script src="{{ URL::asset('admin.js') }}"></script>
-
 </html>

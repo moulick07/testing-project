@@ -6,24 +6,21 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
 
     <!----======== CSS ======== -->
     {{-- <link rel="stylesheet" href="style.css"> --}}
 
     <!----===== Iconscout CSS ===== -->
-    {{-- <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css"> --}}
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
     <link href="{{ URL::asset('admin.css') }}" rel="stylesheet" type="text/css" />
     {{-- <link href="{{ URL::asset('category.css') }}" rel="stylesheet" type="text/css" /> --}}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.datatables.net/1.11.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>  
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.js"></script>
-    <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-    <script src="https://cdn.datatables.net/1.11.4/js/dataTables.bootstrap5.min.js"></script>
+    <link rel="stylesheet" type="text/css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+        <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" />
     <title>Admin Panel</title>
 </head>
 
@@ -47,7 +44,7 @@
                         <i class="uil uil-files-landscapes"></i>
                         <span class="link-name">Product</span>
                     </a></li>
-                <li><a href="{{ route('category') }}">
+                <li><a href="{{ route('getData') }}">
                         <i class="uil uil-chart"></i>
                         <span class="link-name">Category</span>
                     </a></li>
@@ -75,126 +72,137 @@
     </nav>
 
     <section class="dashboard">
-        <div class="top">
+        <div class="top col-3">
             <i class="uil uil-bars sidebar-toggle"></i>
-
-            {{-- <div class="search-box">
-                <i class="uil uil-search"></i>
-                <input type="text" placeholder="Search here...">
-            </div> --}}
-
-            <!--<img src="images/profile.jpg" alt="">-->
         </div>
-        <div class="container-fluid px-1 py-5 mx-auto">
-            <div class="row d-flex justify-content-center">
-                <div class="col-xl-7 col-lg-8 col-md-9 col-11 text-center">
+        
+        <div class="dash-content">
+            <div class="overview">
+                <div class="title">
+                    <i class="uil uil-tachometer-fast-alt"></i>
                     <div class="topnav">
-                        <a href="{{ route('category') }}">Add Category</a> /
-                        <a href="{{ route('variation') }}">Add Variations</a>
-                        
-                      </div>    
-                                        <table class="table table-bordered data-table">
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Title</th>
-                                <th>Description</th>
-                                <th>Parent Category</th>
-                                <th width="105px">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                  
+                       <h5><a>Category Listing</a> 
+               
+
+                    </div>
+                    
                 </div>
-            </div>
-        </div>
-      
-          
+              
+                
+
+                
+                <div class="container-fluid px-1 py-5 mx-auto">
+                    <div class="row d-flex justify-content-center">
+                        <div class="col-xl-7 col-lg-8 col-md-9 col-11 text-center">
+                            <div class="d-flex justify-content-end">
+    
+                                <a href="{{ route('category') }}" >
+                                    <button type="button" class="btn btn-outline-danger">Add Data</button>
+                                </a>
+                            </div>
+                            
+                            <table class="table table-bordered data-table" id="empTable">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Title</th>
+                                        <th>Description</th>
+                                        <th>Parent Category</th>
+                                        <th width="105px">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+
+
                 <!--edit category model-->
-    <div class="modal fade" id="company-modal" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="CompanyModal">Edit Category</h4>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form class="form-card" action="javascript::void(0)" >
-                       
-                       
-                        <div class="row justify-content-between text-left">
-                            <div class="form-group col-sm-6 flex-column d-flex"> <label
-                                    class="form-control-label px-3">Category title<span class="text-danger">
-                                        *</span></label> <input type="text" id="title" name="title"
-                                    placeholder="Enter category title" onblur="validate(1)"> </div>
-                            <div class="form-group col-sm-6 flex-column d-flex"> <label
-                                    class="form-control-label px-3">description<span class="text-danger">
-                                        *</span></label> <input type="text" id="Description" name="Description"
-                                    placeholder="Enter description" onblur="validate(2)"> </div>
-                        </div>
-                        <div class="row justify-content-between text-left">
-                            <div class="form-group col-sm-6 flex-column d-flex">
-                                <label class="form-control-label px-3"> is parent<span class="text-danger">
-                                        *</span></label>
+
+                <!-- Modal -->
+                <div id="updateModal" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
+
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Update Category</h4>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
                             </div>
-                            <div class="col-sm-6 custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="customRadioInline1" name="is_parent" value="1"
-                                    class="custom-control-input">
-                                <label class="custom-control-label" for="1">yes</label>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="title">Categroy Title</label>
+                                    <input type="text" class="form-control" id="title"
+                                        placeholder="Enter Category title" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="Description">Description</label>
+                                    <input type="Description" class="form-control" id="description"
+                                        placeholder="Enter Description">
+                                </div>
+                                <div class="form-group">
+                                    <label for="parent-cat">parent-cat</label>
+                                    <select id='gender' class="form-control">
+                                        <option value="0">Main Category</option>
+                                        @foreach ($categories as $parentCategory)
+                                            <option value="{{ $parentCategory->id }}">
+                                                {{ $parentCategory->title }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-sm-6 form-group custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="customRadioInline1" name="is_parent" value="1"
+                                        class="custom-control-input">
+                                    <label class="custom-control-label" for="1">yes</label>
 
 
-                                <input type="radio" id="customRadioInline2" name="is_parent" value="0"
-                                    class="custom-control-input">
-                                <label class="custom-control-label" for="0">no</label>
+                                    <input type="radio" id="customRadioInline2" name="is_parent" value="0"
+                                        class="custom-control-input">
+                                    <label class="custom-control-label" for="0">no</label>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <input type="hidden" id="txt_empid" value="0">
+                                <button type="button" class="btn btn-success btn-sm" id="btn_save">Save</button>
+                                <button type="button" class="btn btn-default btn-sm"
+                                    data-dismiss="modal">Close</button>
                             </div>
                         </div>
 
-                        <div class="row justify-content-between text-left">
-                            <div class="form-group col-12 flex-column d-flex"> <label
-                                    class="form-control-label px-3">parent category<span class="text-danger">
-                                        *</span></label>
-                                <select class="form-select  search-dropdown" name="parent-cat"
-                                    class="form-control">
-                                    <option value="0">Main Category</option>
-                                    @foreach ($categories as $parentCategory)
-                                        <option value="{{ $parentCategory->id }}">
-                                            {{ $parentCategory->title }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row justify-content-center">
-                            <div class="form-group col-sm-6"> <button type="submit"
-                                    class="btn-block btn-primary">Save changes</button> </div>
-                        </div>
+                    </div>
+                </div>
+                
+                <!-- end edit category model -->
 
-                    </form>
-                </div>
-                <div class="modal-footer">
-                </div>
             </div>
         </div>
-    </div>
-    <!-- end edit category model -->
-
-
     </section>
 
     {{-- <script src="script.js"></script> --}}
-     
+
 </body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.8/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript">
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+</script>
 <script src="{{ URL::asset('admin.js') }}"></script>
 
 <script>
-
     $(function() {
 
         var table = $('.data-table').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ route('variation') }}",
+            ajax: "{{ route('getData') }}",
             columns: [{
                     data: 'id',
                     name: 'id'
@@ -221,46 +229,115 @@
         });
 
     });
-
 </script>
 <script>
+    // Update record
+    $('#empTable').on('click', '.updateUser', function() {
+        var id = $(this).data('id');
 
-    $('body').on('click', '.edit', function() {
-                var product_id = $(this).data('id');
-                var title  = $(this).data('title');
-                $('#company-modal').modal('show');
-                console.log(data.title);
-                $.ajax({
-                    url: "{{ route('editVariation') }}",
-                    data : {id: product_id},
-                     success: function(data){
-     
-    }});
+        $('#txt_empid').val(id);
+
+        // AJAX request
+        $.ajax({
+            url: "{{ route('getCategorydata') }}",
+            type: 'get',
+            data: {
+                id: id
+            },
+            dataType: 'json',
+            success: function(response) {
+
+                if (response.success == 1) {
+
+                    $('#title').val(response.title);
+                    $('#Description').val(response.Description);
+                    $('#parent-cat').val(response.parent - cat);
+                    $('#is_parent').val(response.is_parent);
+
+                    empTable.ajax.reload();
+                } else {
+                    alert("Invalid ID.");
+                }
+            }
+        });
+
+    });
+
+    // Save user 
+    $('#btn_save').click(function() {
+        var id = $('#txt_empid').val();
+
+        var title = $('#title').val().trim();
+        var Description = $('#Description').val();
+        var parentcat = $('#parent-cat').val();
+        var is_parent = $('#is_parent').val();
+
+        if (title != '' && Description != '' && is_parent != '') {
+
+            // AJAX request
+            $.ajax({
+                url: "{{ route('updateCategory') }}",
+                type: 'post',
+                data: {
+                    id: id,
+                    title: title,
+                    Description: Description,
+                    parentcat: parentcat,
+                    is_parent: is_parent
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success == 1) {
+                        alert(response.msg);
+
+                        // Empty and reset the values
+                        $('#title', '#Description', '#parent-cat').val('');
+                        $('#is_parent').val(1);
+                        $('#txt_empid').val(0);
+
+                        // Reload DataTable
+                        empTable.ajax.reload();
+
+                        // Close modal
+                        $('#updateModal').modal('toggle');
+                    } else {
+                        alert(response.msg);
+                    }
+                }
             });
 
-            function editFunc(id){
-                console.log(id);
-                $.ajax({
-        type: "POST",
-        url: '{{ route('update') }}',
-        data: { id: id },
-        dataType: 'json',
-        success: function(res){
-            $('#company-modal').modal('show');
-            $('#id').val(res.id);
-            $('#title').val(res.title);
-            $('#image_url').val('');
-            $('.image_url').text('');
-            var url = base_path+'uploads/category/'+res.image_url;
-            if (image_url) {
-                $('#image').attr('src',url);
-            } else {
-                $('#image').innerHTML = "N/A";
-            }
+        } else {
+            alert('Please fill all fields.');
         }
     });
-}
 
+    // Delete record
+    $('#empTable').on('click', '.deleteUser', function() {
+        var id = $(this).data('id');
+
+        var deleteConfirm = confirm("Are you sure?");
+        if (deleteConfirm == true) {
+            // AJAX request
+            $.ajax({
+                url: "{{ route('deleteCategory') }}",
+                type: 'post',
+                data: {
+                    id: id
+                },
+                success: function(response) {
+                    if (response.success == 1) {
+                        alert("Record deleted.");
+
+                        // Reload DataTable
+
+                    } else {
+                        alert("Invalid ID.");
+                    }
+                }
+            });
+        }
+
+    });
 </script>
 
 </html>
