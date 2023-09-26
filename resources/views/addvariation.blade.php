@@ -82,7 +82,7 @@
     <nav>
         <div class="logo-name">
             <div class="logo-image">
-                <img src="images/logo.png" alt="">
+                {{-- <img src="images/logo.png" alt=""> --}}
             </div>
 
             <span class="logo_name">Variations</span>

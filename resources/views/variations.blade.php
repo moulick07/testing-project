@@ -29,7 +29,7 @@
     <nav>
         <div class="logo-name">
             <div class="logo-image">
-                <img src="images/logo.png" alt="">
+                {{-- <img src="images/logo.png" alt=""> --}}
             </div>
 
             <span class="logo_name">Variations</span>
@@ -98,16 +98,16 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             @endif
-                <div class="container-fluid px-1 py-5 mx-auto">
+                <div class="container-fluid px-1 py-5 mx-auto ">
                     <div class="row d-flex justify-content-center">
                         <div class="col-xl-7 col-lg-8 col-md-9 col-11 text-center">
                             <div class="d-flex justify-content-end">
-                                <a href="{{ route('category') }}" >
-                                    <button type="button" class="btn btn-outline-danger">Add Data</button>
+                                <a href="{{ route('category') }}" class="mb-3">
+                                    <button type="button" class="btn btn-outline-danger">Add Category</button>
                                 </a>
                             </div>
                             
-                            <table class="table table-bordered data-table" id="empTable">
+                            <table class="table table-bordered table-striped data-table" id="empTable">
                                 <thead>
                                     <tr>
                                         <th>No</th>

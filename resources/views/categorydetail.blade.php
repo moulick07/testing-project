@@ -25,7 +25,7 @@
     <nav>
         <div class="logo-name">
             <div class="logo-image">
-                <img src="images/logo.png" alt="">
+                {{-- <img src="images/logo.png" alt=""> --}}
             </div>
 
             <a><span class="category-detail">Category Detail</span></a>
@@ -99,7 +99,7 @@
                             Add Variation
                         </button>
 
-                        <!-- Modal -->
+                 
                         <!-- Modal -->
                         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
                             aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -182,7 +182,7 @@
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="row mt-5">
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body">
@@ -301,7 +301,7 @@
                         {{ csrf_field() }}
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                <h5 class="modal-title" id="exampleModalLabel">Confirmation</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>

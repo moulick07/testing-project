@@ -27,6 +27,10 @@ Route::group(['middleware' => ['admin']], function () {
 
    // variation route
    Route::get('/variation-added/{id}', [variationController::class, 'variationSave'])->name('save-variation');
+   Route::get('/addproduct', function(){
+      return view('addProduct');
+   })->name('save-variation');
+
 
 
 });
