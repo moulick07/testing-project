@@ -75,7 +75,6 @@
     <!------ Include the above in your HEAD tag ---------->
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
     <link href="{{ URL::asset('admin.css') }}" rel="stylesheet" type="text/css" />
-    
     <title>Admin Panel</title>
 </head>
 
@@ -86,7 +85,7 @@
                 <img src="images/logo.png" alt="">
             </div>
 
-            <span class="logo_name">CodingLab</span>
+            <span class="logo_name">Variations</span>
         </div>
 
         <div class="menu-items">
@@ -99,7 +98,7 @@
                         <i class="uil uil-files-landscapes"></i>
                         <span class="link-name">Product</span>
                     </a></li>
-                <li><a href="{{ route('category') }}">
+                <li><a href="{{ route('getData') }}">
                         <i class="uil uil-chart"></i>
                         <span class="link-name">Category</span>
                     </a></li>
@@ -145,15 +144,10 @@
                     <span class="text">Dashboard</span>
                 </div>
 
-                <div class="row">
-                    <div class="col-12">
-                        <a href="" class="btn ">Category Detail</a>
-                        <a href="{{ route('addVariation') }}" class="btn ">Add Variation</a>
-                    </div>
-                </div>
+                
 
-                <form id="form" action="{{ route('save-category') }}">
-                    <h2>Add Category </h2>
+                {{-- <form id="form" action="{{ url('variation-added/'.$category->id) }}">
+                    <h2>Add Variations </h2>
 
 
                     <!-- Details -->
@@ -165,50 +159,49 @@
                         <!-- Input Type Text -->
                         <input type="text" id="name" name="title" placeholder="Enter Category Title" />
                     </div>
-
                     <div class="form-control">
-                        <label for="description" id="">
-                            description
+                        <label for="type" id="label-name">
+                            Type
                         </label>
 
-                        <!-- Input Type Email-->
-                        <input type="text" name="Description" id="email"
-                            placeholder="Enter Category description " />
+                        <!-- Input Type Text -->
+                        <input type="text" id="name" name="type" placeholder="types of variation " />
                     </div>
 
+                    <div class="form-control">
+                        <span>Prefix :</span>
+                        <input type="text" id="name" name="prefix" placeholder="Enter prefix for the variations" />
+
+                    </div>
+
+                    <div class="form-control">
+                        <span>Postfix :</span>
+                        <input type="text" id="name" name="postfix" placeholder="Enter postfix for the variations " />
+
+                    </div>
                     <div class="form-control d-flex">
-                        <span>Is Parent :</span>
+                        <span>countable :</span>
                         <label class="radio-inline">
-                            <input type="radio" name="is_parent" value="1">yes
+                            <input type="radio" name="countable" value="1">yes
                         </label>
                         <label class="radio-inline">
-                            <input type="radio" name="is_parent" value="0">No
+                            <input type="radio" name="countable" value="0">No
                         </label>
                     </div>
-
                     <div class="form-control">
-                        <label for="role" id="label-role">
-                            Select Parent Category
-                        </label>
+                        <span>Value :</span>
+                        <input type="text" id="name" name="value" placeholder="Enter types " />
 
-                        <!-- Dropdown options -->
-                        <select name="parent-cat" id="role">
-                            <option value="0">None</option>
-
-                            {{-- @foreach ($categories as $parentCategory)
-                                <option value="{{ $parentCategory->id }}">
-                                    {{ $parentCategory->title }}</option>
-                            @endforeach --}}
-                        </select>
                     </div>
-                    <!-- Multi-line Text Input Control -->
+
+                    
+                   
+                    
                     <button type="submit" value="submit">
                         Save
                     </button>
-                   <a href="{{ route('getData') }}" class="btn btn-s"> 
-                        view all Category 
-                    </button></a>
-                </form>
+                 
+                </form> --}}
                     
             </div>
         </div>

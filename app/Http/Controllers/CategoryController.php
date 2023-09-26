@@ -13,6 +13,8 @@ class CategoryController extends Controller
     }
     public function save(Request $request){
         $input = $request->all();
+        $categories= Category::all();
+
         $request->validate([
             'title' => 'required',
             'Description' => 'required|max:255',
@@ -24,8 +26,10 @@ class CategoryController extends Controller
             'description'=>$request->input('Description'),
             'is_parent'=>$request->input('is_parent'),
             'parent_category'=>$request->input('parent-cat'),
+
         ]);
-        return back()->with('success','successfull category created ');
+    
+        return redirect('category-list')->with(['success' => true, 'message' => 'successfully Category created'], 200)->with('categories',$categories);
     }
     public function data(Request $request){
         $categories= Category::all();
@@ -88,9 +92,9 @@ class CategoryController extends Controller
     }
 
     // Update Category record
-    public function updateCategory(Request $request){
+    public function updateCategory(Request $request , $id){
         ## Read POST data
-        $id = $request->post('id');
+       
 
         $empdata = Category::find($id);
 
@@ -114,14 +118,16 @@ class CategoryController extends Controller
              $response['msg'] = 'Invalid ID.';
         }
 
-        return response()->json($response); 
+        return back(); 
     }
 
     // Delete Employee
-    public function deleteCategory(Request $request){
+    public function deleteCategory(Request $request,$id){
 
         ## Read POST data
-        $id = $request->post('id');
+        $categories= Category::all();
+
+        
 
         $empdata = Category::find($id);
 
@@ -133,11 +139,12 @@ class CategoryController extends Controller
             $response['msg'] = 'Invalid ID.';
         }
 
-        return response()->json($response); 
+        return redirect('category-list')->with(['success' => true, 'message' => 'successfully Category delete'], 200)->with('categories',$categories);
     }
 
-    public function addVariation(){
-
-        return  view('addvariation');
+    public function addVariation(Request $request){
+        $category = Category::find($request->id);
+        
+        return  view('addvariation',compact('category'));
     }
 }

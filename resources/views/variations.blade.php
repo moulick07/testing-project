@@ -21,6 +21,7 @@
         <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <title>Admin Panel</title>
 </head>
 
@@ -89,13 +90,18 @@
                 </div>
               
                 
-
                 
+                
+                @if (session('message'))
+                <div class="alert alert-{{ session('status') }} alert-dismissible fade show" role="alert">
+                    <strong>{{ session('message') }}</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
                 <div class="container-fluid px-1 py-5 mx-auto">
                     <div class="row d-flex justify-content-center">
                         <div class="col-xl-7 col-lg-8 col-md-9 col-11 text-center">
                             <div class="d-flex justify-content-end">
-    
                                 <a href="{{ route('category') }}" >
                                     <button type="button" class="btn btn-outline-danger">Add Data</button>
                                 </a>
@@ -187,7 +193,9 @@
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.8/js/jquery.dataTables.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script type="text/javascript">
+
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -230,114 +238,6 @@
 
     });
 </script>
-<script>
-    // Update record
-    $('#empTable').on('click', '.updateUser', function() {
-        var id = $(this).data('id');
 
-        $('#txt_empid').val(id);
-
-        // AJAX request
-        $.ajax({
-            url: "{{ route('getCategorydata') }}",
-            type: 'get',
-            data: {
-                id: id
-            },
-            dataType: 'json',
-            success: function(response) {
-
-                if (response.success == 1) {
-
-                    $('#title').val(response.title);
-                    $('#Description').val(response.Description);
-                    $('#parent-cat').val(response.parent - cat);
-                    $('#is_parent').val(response.is_parent);
-
-                    empTable.ajax.reload();
-                } else {
-                    alert("Invalid ID.");
-                }
-            }
-        });
-
-    });
-
-    // Save user 
-    $('#btn_save').click(function() {
-        var id = $('#txt_empid').val();
-
-        var title = $('#title').val().trim();
-        var Description = $('#Description').val();
-        var parentcat = $('#parent-cat').val();
-        var is_parent = $('#is_parent').val();
-
-        if (title != '' && Description != '' && is_parent != '') {
-
-            // AJAX request
-            $.ajax({
-                url: "{{ route('updateCategory') }}",
-                type: 'post',
-                data: {
-                    id: id,
-                    title: title,
-                    Description: Description,
-                    parentcat: parentcat,
-                    is_parent: is_parent
-                },
-                dataType: 'json',
-                success: function(response) {
-                    if (response.success == 1) {
-                        alert(response.msg);
-
-                        // Empty and reset the values
-                        $('#title', '#Description', '#parent-cat').val('');
-                        $('#is_parent').val(1);
-                        $('#txt_empid').val(0);
-
-                        // Reload DataTable
-                        empTable.ajax.reload();
-
-                        // Close modal
-                        $('#updateModal').modal('toggle');
-                    } else {
-                        alert(response.msg);
-                    }
-                }
-            });
-
-        } else {
-            alert('Please fill all fields.');
-        }
-    });
-
-    // Delete record
-    $('#empTable').on('click', '.deleteUser', function() {
-        var id = $(this).data('id');
-
-        var deleteConfirm = confirm("Are you sure?");
-        if (deleteConfirm == true) {
-            // AJAX request
-            $.ajax({
-                url: "{{ route('deleteCategory') }}",
-                type: 'post',
-                data: {
-                    id: id
-                },
-                success: function(response) {
-                    if (response.success == 1) {
-                        alert("Record deleted.");
-
-                        // Reload DataTable
-
-                    } else {
-                        alert("Invalid ID.");
-                    }
-                }
-            });
-        }
-
-    });
-</script>
 
 </html>

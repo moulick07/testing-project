@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\variationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CategoryController;
+
  
  Route::get('/', function () {
     return view('welcome');
@@ -18,9 +20,15 @@ Route::group(['middleware' => ['admin']], function () {
    Route::get('/category-list', [CategoryController::class, 'data'])->name('getData');
    Route::get('/getCategory', [CategoryController::class, 'getCategoryData'])->name('getCategorydata');
    Route::get('/detailCategory/{id}', [CategoryController::class, 'detailCategoryData'])->name('getDetailCategory');
-   Route::get('/addVariation', [CategoryController::class, 'addVariation'])->name('addVariation');
-   Route::post('/updateCategory', [CategoryController::class, 'updateCategory'])->name('updateCategory');
-   Route::post('/deleteCategory', [CategoryController::class, 'deleteCategory'])->name('deleteCategory');
+   Route::get('/addVariation/{id}', [CategoryController::class, 'addVariation'])->name('addVariation');
+   Route::post('/updateCategory/{id}', [CategoryController::class, 'updateCategory'])->name('updateCategory');
+   Route::post('/deleteCategory/{id}', [CategoryController::class, 'deleteCategory'])->name('deleteCategory');
+
+
+   // variation route
+   Route::get('/variation-added/{id}', [variationController::class, 'variationSave'])->name('save-variation');
+
+
 });
 Route::get('/logout', function(){
         Auth::logout();
