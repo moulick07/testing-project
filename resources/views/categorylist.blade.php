@@ -41,11 +41,11 @@
                         <i class="uil uil-estate"></i>
                         <span class="link-name">Dahsboard</span>
                     </a></li>
-                <li><a href="">
+                <li><a href="{{ route('addproduct') }}">
                         <i class="uil uil-files-landscapes"></i>
                         <span class="link-name">Product</span>
                     </a></li>
-                <li><a href="{{ route('getData') }}">
+                <li><a href="{{ route('getCategorydata') }}">
                         <i class="uil uil-chart"></i>
                         <span class="link-name">Category</span>
                     </a></li>

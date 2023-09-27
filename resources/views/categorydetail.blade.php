@@ -9,7 +9,12 @@
 
     <!----======== CSS ======== -->
     {{-- <link rel="stylesheet" href="style.css"> --}}
-
+    <style>
+        label.error {
+         color: #dc3545;
+         font-size: 14px;
+    }
+    </style>
     <!----===== Iconscout CSS ===== -->
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -111,7 +116,7 @@
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
-                                    <form action="{{ url('variation-added/' . $detailcategory[0]->id) }}"
+                                    <form action="{{ url('variation-added/' . $detailcategory[0]->id) }}" id="variationform"
                                         method="GET">
                                         {{ csrf_field() }}
                                         <div class="modal-body gap-4">
@@ -119,7 +124,7 @@
                                                 <label for="title" class="col-sm-4 col-form-label">Title</label>
                                                 <div class="col-sm-8">
                                                     <input type="text" id="title" name="title"
-                                                        class="form-control" placeholder="Enter title" required>
+                                                        class="form-control" placeholder="Enter title" >
                                                 </div>
                                             </div>
 
@@ -127,7 +132,7 @@
                                                 <label for="value" class="col-sm-4 col-form-label">Value</label>
                                                 <div class="col-sm-8">
                                                     <input type="text" id="value" name="value"
-                                                        class="form-control" placeholder="Enter value" required>
+                                                        class="form-control" placeholder="Enter value" >
                                                 </div>
                                             </div>
 
@@ -238,7 +243,7 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <form action="{{ url('updateCategory/' . $detailcategory->id) }}" method="POST">
+                        <form action="{{ url('updateCategory/' . $detailcategory->id) }}" id="EditForm" method="POST">
                             {{ csrf_field() }}
                             <div class="modal-body gap-4">
                                 <div class="form-group row mb-3">
@@ -246,7 +251,7 @@
                                     <div class="col-sm-8">
                                         <input type="text" id="title" name="title" class="form-control"
                                             value="{{ $detailcategory->title }}"
-                                            placeholder="{{ $detailcategory->title }}" required>
+                                            placeholder="{{ $detailcategory->title }}" >
                                     </div>
                                 </div>
 
@@ -254,7 +259,7 @@
                                     <label for="description" class="col-sm-4 col-form-label">Description</label>
                                     <div class="col-sm-8">
                                         <input type="text" id="value" name="description" class="form-control"
-                                            value="{{ $detailcategory->description }}" required>
+                                            value="{{ $detailcategory->description }}" >
                                     </div>
                                 </div>
 
@@ -330,6 +335,32 @@
     integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
 </script>
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.8/js/jquery.dataTables.min.js"></script>
-<script></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+<script>
+            $(document).ready(function() {
+            $("#variationform").validate({
+                rules: {
+                    title: "required",
+                    value: "required",
+                    type: "required",
+                    prefix: "required",
+                    postfix: "required",
+                    countable: "required",
+                  
+                }
+            });
+            $("#EditForm").validate({
+                rules: {
+                    title: "required",
+                    description: "required",
+                    parent_category: "required",
+                    is_parent: "required",
+                   
+                  
+                }
+            });
+        });
+
+</script>
 
 </html>

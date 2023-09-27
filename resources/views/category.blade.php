@@ -96,11 +96,11 @@
 
         <div class="menu-items">
             <ul class="nav-links">
-                <li><a href="#">
+                <li><a href="{{ route('admin.home') }}">
                         <i class="uil uil-estate"></i>
                         <span class="link-name">Dahsboard</span>
                     </a></li>
-                <li><a href="">
+                <li><a href="{{ route('addproduct') }}">
                         <i class="uil uil-files-landscapes"></i>
                         <span class="link-name">Product</span>
                     </a></li>
@@ -166,7 +166,9 @@
                         </label>
 
                         <!-- Input Type Text -->
-                        <input type="text" id="name" name="title" placeholder="Enter Category Title" />
+                        <input type="text" id="name" name="title" placeholder="Enter Category Title" />@error('title')
+                        <div class="error" style="color: red;">{{ $message }}</div>
+                    @enderror
                     </div>
 
                     <div class="form-control">
@@ -176,7 +178,9 @@
 
                         <!-- Input Type Email-->
                         <input type="text" name="Description" id="email"
-                            placeholder="Enter Category description " />
+                            placeholder="Enter Category description " />@error('Description')
+                            <div class="error" style="color: red;">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <div class="form-control d-flex">
@@ -187,6 +191,9 @@
                         <label class="radio-inline">
                             <input type="radio" name="is_parent" value="0">No
                         </label>
+                        @error('is_parent')
+                                                    <div class="error" style="color: red;">{{ $message }}</div>
+                                                @enderror
                     </div>
 
                     <div class="form-control">
@@ -202,7 +209,9 @@
                                 <option value="{{ $parentCategory->id }}">
                                     {{ $parentCategory->title }}</option>
                             @endforeach
-                        </select>
+                        </select>@error('parent-cat')
+                        <div class="error" style="color: red;">{{ $message }}</div>
+                    @enderror
                     </div>
                     <!-- Multi-line Text Input Control -->
                     <button type="submit" value="submit">

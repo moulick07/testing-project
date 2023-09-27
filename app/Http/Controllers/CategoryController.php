@@ -54,7 +54,7 @@ class CategoryController extends Controller
                 
         }
 
-        return view('variations')->with('categories',$categories);
+        return view('categorylist')->with('categories',$categories);
      
     }
 

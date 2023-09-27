@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('product_categories', function (Blueprint $table) {
-            $table->integer('product_id');
-            $table->integer('category_id');
+        Schema::table('products', function (Blueprint $table) {
+            $table->string('variant');
+            $table->integer('value');
+            $table->string('long-description');
         });
     }
 
@@ -22,6 +23,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('personal_access_tokens');
+        Schema::table('products', function (Blueprint $table) {
+            //
+        });
     }
 };

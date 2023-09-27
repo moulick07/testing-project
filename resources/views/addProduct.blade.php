@@ -31,11 +31,11 @@
 
         <div class="menu-items">
             <ul class="nav-links">
-                <li><a href="#">
+                <li><a href="{{ route('admin.home') }}">
                         <i class="uil uil-estate"></i>
                         <span class="link-name">Dahsboard</span>
                     </a></li>
-                <li><a href="">
+                <li><a href>
                         <i class="uil uil-files-landscapes"></i>
                         <span class="link-name">Product</span>
                     </a></li>
@@ -104,15 +104,13 @@
                                 <h4 class="mb-1 mt-3">Add a new Product</h4>
                                 <p>Orders placed across your store</p>
                             </div>
-                            <div class="d-flex align-content-center flex-wrap gap-3">
-                               
-                                <button type="submit" class="btn btn-primary waves-effect waves-light">Save
-                                    product</button>
-                            </div>
+                            
                         </div>
+                        <form class="w-px-500 p-3 p-md-3" action="{{ route('saveproduct') }}" method="post"  enctype="multipart/form-data">
+                            @csrf
 
                         <div class="row">
-
+                            
                             <!-- First column-->
                             <div class="col-12 col-lg-8">
                                 <!-- Product Information -->
@@ -122,9 +120,11 @@
                                     </div>
                                     <div class="card-body">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <input type="text" class="form-control" id="ecommerce-product-name"
-                                                placeholder="Product title" name="productTitle"
-                                                aria-label="Product title">
+                                            <input type="text" class="form-control"
+                                                placeholder="Product title" name="title" value="{{Request::old('title')}}"
+                                                aria-label="Product title">@error('title')
+                                                <div class="error" style="color: red;">{{ $message }}</div>
+                                            @enderror
                                             <label for="ecommerce-product-name">Name</label>
                                         </div>
 
@@ -133,17 +133,21 @@
                                             <div class="col">
                                                 <div class="form-floating form-floating-outline">
                                                     <input type="number" class="form-control"
-                                                        id="ecommerce-product-sku" placeholder="00000" name="productSku"
-                                                        aria-label="Product SKU">
+                                                       placeholder="00000" name="instock" value="{{Request::old('instock')}}"
+                                                        aria-label="Product SKU">@error('instock')
+                                                        <div class="error" style="color: red;">{{ $message }}</div>
+                                                    @enderror
                                                     <label for="ecommerce-product-sku">In Stock</label>
                                                 </div>
                                             </div>
                                             <div class="col">
                                                 <div class="form-floating form-floating-outline">
                                                     <input type="text" class="form-control"
-                                                        id="ecommerce-product-barcode" placeholder="0123-4567"
-                                                        name="productBarcode" aria-label="Product barcode">
-                                                    <label for="ecommerce-product-name">Short Description</label>
+                                                         placeholder="0123-4567" value="{{Request::old('short_description')}}"
+                                                        name="short_description" aria-label="Product barcode">@error('short_description')
+                                                        <div class="error" style="color: red;">{{ $message }}</div>
+                                                    @enderror
+                                                    <label for="ecommerce-product-name" >Short Description</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -151,8 +155,12 @@
                                         <div class="col">
                                             <div class="form-floating form-floating-outline">
                                                 <textarea type="text" class="form-control"
-                                                    id="ecommerce-product-barcode" placeholder="0123-4567"
-                                                    name="productBarcode" aria-label="Product barcode"></textarea>
+                                                    placeholder="0123-4567"
+                                                    name="long_description" aria-label="Product barcode">
+                                                </textarea>
+                                                @error('long_description')
+                                                <div class="error" style="color: red;">{{ $message }}</div>
+                                            @enderror
                                                 <label for="ecommerce-product-name">Long Description</label>
                                             </div>
                                         </div>
@@ -166,9 +174,24 @@
                                         <a href="#" class="fw-medium">Add media from URL</a>
                                     </div>
                                     <div class="card-body">
-                                        <form>
-                                            <input type="file" id="imageInput" accept="image/*">
-                                        </form>
+                                        <div class="form-group row mb-3">
+                                            <label for="value" class="col-sm-4 col-form-label">Cover Image</label>
+                                            <div class="col-sm-8">
+                                                <input type="file" name="cover_image" id="cover_image" class="form-control">@error('cover_image')
+                                                <div class="error" style="color: red;">{{ $message }}</div>
+                                            @enderror
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mb-3">
+                                            <label for="value" class="col-sm-4 col-form-label">Product Image</label>
+                                            <div class="col-sm-8">
+                                                <input type="file" name="product_image" id="product_image" class="form-control">@error('product_image')
+                                                <div class="error" style="color: red;">{{ $message }}</div>
+                                            @enderror
+
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <!-- /Media -->
@@ -178,12 +201,11 @@
                                         <h5 class="card-title mb-0">Variants</h5>
                                     </div>
                                     <div class="card-body">
-                                        <form class="w-px-500 p-3 p-md-3" action="#" method="post">
-                                            @csrf
+                                        
                                             <div class="row clone-row">
                                                 <div class="col-md-5 mb-4">
                                                     <label class="form-label">Option</label>
-                                                    <select class="form-control form-control-sm" name="Language[]">
+                                                    <select class="form-control form-control-sm" name="Variant[]" value="{{Request::old('variant[]')}}">
                                                         <option value="AK">PHP</option>
                                                         <option value="HI">Laravel</option>
                                                         <option value="CA">Cake PHP</option>
@@ -191,11 +213,15 @@
                                                         <option value="OR">YII</option>
                                                         <option value="VA">Zend</option>
                                                         <option value="WV">Phalcon</option>
-                                                    </select>
+                                                    </select>@error('variant')
+                                                    <div class="error" style="color: red;">{{ $message }}</div>
+                                                @enderror
                                                 </div>
                                                 <div class="col-md-5 mb-4">
                                                     <label class="form-label">add Value</label>
-                                                    <input type="text" name="value[]" class="form-control form-control-sm">
+                                                    <input type="text" name="value[]" value="{{Request::old('value[]')}}" class="form-control form-control-sm">@error('value')
+                                                    <div class="error" style="color: red;" >{{ $message }}</div>
+                                                @enderror
                                                 </div>
                                                 <div class="col-md-1" style="margin-top:27px;">
                                                     <span class="btn btn-danger btn-xs pull-right btn-del-select py-0">Remove</span>
@@ -204,15 +230,14 @@
                                             <div class="col-md-2" style="margin-left: 5px;">
                                                 <span class="btn btn-secondary btn-xs add-select py-0">Add More</span>
                                             </div>
+                                           
                                             
-                                            
-                                        </form>
+                                        
                                     </div>
                                 </div>
                                 <!-- /Variants -->
 
                             </div>
-                            <!-- /Second column -->
 
                             <!-- Second column -->
                             <div class="col-12 col-lg-4">
@@ -224,16 +249,20 @@
                                     <div class="card-body">
                                         <!-- Base Price -->
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <input type="number" class="form-control" id="ecommerce-product-price"
-                                                placeholder="Price" name="productPrice" aria-label="Product price">
+                                            <input type="number" class="form-control" 
+                                                placeholder="Price" name="price" value="{{Request::old('price')}}" aria-label="Product price">@error('price')
+                                                <div class="error" style="color: red;">{{ $message }}</div>
+                                            @enderror
                                             <label for="ecommerce-product-price">Best Price</label>
                                         </div>
 
                                         <!-- Discounted Price -->
                                         <div class="form-floating form-floating-outline mb-4">
                                             <input type="number" class="form-control"
-                                                id="ecommerce-product-discount-price" placeholder="Discounted Price"
-                                                name="productDiscountedPrice" aria-label="Product discounted price">
+                                                placeholder="Discounted Price"
+                                                name="discount_price" value="{{Request::old('discount_price')}}" aria-label="Product discounted price">@error('discount_price')
+                                                <div class="error" style="color: red;">{{ $message }}</div>
+                                            @enderror
                                             <label for="ecommerce-product-discount-price">Discounted Price</label>
                                         </div>
 
@@ -255,26 +284,28 @@
 
                                                     <div class="form-floating form-floating-outline mb-4">
                                                         <input type="text" class="form-control"
-                                                            id="ecommerce-product-discount-price"
+                                                          
                                                             placeholder="Discounted Price"
-                                                            name="productDiscountedPrice"
-                                                            aria-label="Product discounted price">
+                                                            name="merchant" value="{{Request::old('merchant')}}"
+                                                            aria-label="Product discounted price">@error('merchant') 
+                                                            <div class="error" style="color: red;">{{ $message }}</div>
+                                                        @enderror
                                                         <label for="ecommerce-product-discount-price">Brand </label>
                                                     </div>
                                                     <!-- Collection -->
-                                                    <select id="status-org"
-                                                        class="select2 form-select select2-hidden-accessible"
-                                                        data-placeholder="Select Status" data-select2-id="status-org"
-                                                        tabindex="-1" aria-hidden="true">
-                                                        <option value="" data-select2-id="12">Select Category
-                                                        </option>
-                                                        <option value="Published" data-select2-id="35">Published
-                                                        </option>
-                                                    </select>
+                                                    <select
+                                                        class="select2 form-control form-select select2-hidden-accessible"
+                                                        data-placeholder="Select Status" data-select2-id="status-org" 
+                                                        tabindex="-1"  name="category" aria-hidden="true">
+                                                        <option value="0">Select Parent</option>
 
-                                                    <!-- Status -->
-
-                                                    <!-- Tags -->
+                                                        @foreach ($parentCategory as $parentCategory)
+                                                            <option value="{{ $parentCategory->id }}">
+                                                                {{ $parentCategory->title }}</option>
+                                                        @endforeach
+                                                    </select>@error('category')
+                                                    <div class="error" style="color: red;">{{ $message }}</div>
+                                                @enderror
                                                     <label for="vendor"></label>
                                                 </div>
                                             </div>
@@ -286,7 +317,13 @@
                                 <!-- /Organize Card -->
                             </div>
                             <!-- /Second column -->
+                            <div class="d-flex align-content-center flex-wrap gap-3">
+                               
+                                <button type="submit" class="btn btn-primary" >Save changes</button>
+                              
+                            </div>
                         </div>
+                    </form>
                     </div>
                 </div>
             </div>

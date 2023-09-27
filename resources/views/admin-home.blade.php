@@ -27,11 +27,11 @@
 
         <div class="menu-items">
             <ul class="nav-links">
-                <li><a href="#">
+                <li><a href="{{ route('admin.home') }}">
                     <i class="uil uil-estate"></i>
                     <span class="link-name">Dahsboard</span>
                 </a></li>
-                <li><a href="">
+                <li><a href="{{ route('addproduct') }}">
                     <i class="uil uil-files-landscapes"></i>
                     <span class="link-name">Product</span>
                 </a></li>

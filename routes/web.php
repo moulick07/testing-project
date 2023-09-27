@@ -4,6 +4,7 @@ use App\Http\Controllers\variationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController;
 
  
  Route::get('/', function () {
@@ -27,9 +28,8 @@ Route::group(['middleware' => ['admin']], function () {
 
    // variation route
    Route::get('/variation-added/{id}', [variationController::class, 'variationSave'])->name('save-variation');
-   Route::get('/addproduct', function(){
-      return view('addProduct');
-   })->name('save-variation');
+   Route::get('/addproduct', [ProductController::class, 'index'])->name('addproduct');
+   Route::post('/save-product', [ProductController::class, 'saveProduct'])->name('saveproduct');
 
 
 
