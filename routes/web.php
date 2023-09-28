@@ -28,9 +28,13 @@ Route::group(['middleware' => ['admin']], function () {
 
    // variation route
    Route::get('/variation-added/{id}', [variationController::class, 'variationSave'])->name('save-variation');
+
+   //product route
    Route::get('/addproduct', [ProductController::class, 'index'])->name('addproduct');
    Route::post('/save-product', [ProductController::class, 'saveProduct'])->name('saveproduct');
-
+   Route::post('/fetch-subcategory', [ProductController::class, 'subCategory'])->name('subCategory');
+   Route::get('/product-list', [ProductController::class, 'productView'])->name('productList');
+   Route::get('/detailProduct/{id}', [ProductController::class, 'detailProductData'])->name('getProductDetail');
 
 
 });

@@ -5,22 +5,24 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\Product;
+use Illuminate\Support\Facades\Validator;
+use Yajra\DataTables\Datatables;
+
 
 
 class ProductController extends Controller
 {
     //
     public function index(){
-        $parentCategory = Category::where('is_parent',1)->get();
+        $parentCategory = Category::where('parent_category',0)->get();
         
         return view('addProduct')->with('parentCategory',$parentCategory);
     }
+
     public function saveProduct(Request $request){
-        $input = $request->all();
-        // dd($input);
         $categories= Product::all();
         
-       $validator =  $request->validate([
+       $validator =  Validator::make($request->all(),[
             'title' => 'required',
             'short_description' => 'required|max:255',
             'long_description' => 'required',
@@ -29,43 +31,93 @@ class ProductController extends Controller
             'discount_price'=> 'required',
             'merchant'=> 'required',
             'category'=> 'required',
-            'product_image' => 'required|mimes:png,jpg,jpeg,webp|max:2048',
+            'product_image.*' => 'required|mimes:png,jpg,jpeg,webp|max:2048',
             'cover_image' => 'required|mimes:png,jpg,jpeg,webp|max:2048',
             'value' => 'required',
+            'parent_product'=>'required',
         ]);
         
        
         if ($validator->fails()) {
-             return $validator->errors(); 
+             return redirect('/addproduct')->withErrors($validator); 
         }
         else{
-            $productImageName = time().'.'.$request->product_image->extension();  
-        $coverImageName = time().'.'.$request->cover_image->extension();
-        
-        $request->product_image->move(public_path('images'), $productImageName);
-        $request->cover_image->move(public_path('images'), $coverImageName);
-       $product =  Product::create([
+            $files = [];
+            foreach($request->file('product_image') as $key=>$file)
+            {
+                $name = time().'.'.$file->extension();
+                $files[] = $name;  
+                $file->move(public_path('images/ProductImage'), end($files));
+            } 
+            $coverImageName = time().'.'.$request->cover_image->extension();
+            
+            $request->cover_image->move(public_path('images/CoverImage'), $coverImageName);
+          
+
+        Product::create([
             'name'=>$request->input('title'),
-            'short-description'=>$request->input('short_description'),
-            'long-description'=>$request->input('long_description'),
-            'in-stock'=>$request->input('instock'),
+            'short_description'=>$request->input('short_description'),
+            'long_description'=>$request->input('long_description'),
+            'in_stock'=>$request->input('instock'),
             'price'=>$request->input('price'),
             'discounted-price'=>$request->input('discount_price'),
             'brand'=>$request->input('merchant'),
             'variant'=>implode(',',$request->input('Variant')),
             'value'=>implode(',',$request->input('value')),
-            'parent_product'=>$request->input('category'),
-            'main-category'=>1,
+            'parent_product'=>$request->input('parent_product'),
+            'main_category'=>$request->input('category'),
             'is_active'=>1,
-            'cover-image'=>$coverImageName,
-            'images'=>$productImageName,
+            'cover_image'=>$coverImageName,
+            'images'=>implode(',',$files),
 
         ]);
             return redirect('addproduct')->with(['success' => true, 'message' => 'successfully Product created'], 200);
         }   
       
-            
+                  
 
         
+    }
+
+    public function detailProductData($id){
+        $detailproduct = Product::where('id',$id)->get();
+        // dd($cat);
+        ## Read POST 
+        return view('productdetail',compact('detailproduct'));
+
+    }
+
+
+    public function subCategory(Request $request){
+        // dd($request);
+        $data['sub_category'] = Category::where('parent_category',$request->country_id)->get(['title','id']);
+        return response()->json($data);
+    }
+
+
+    public function productView(Request $request){
+        $categories= Product::all();
+
+        if ($request->ajax()) {
+            // dd($request);
+            $data = Product::select('*');
+            
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function($row){
+                    // Update Button
+                    $updateButton = "<a href=detailProduct/".$row->id."> <button class='btn btn-sm btn-info updateUser' ><i class='fa fa-eye'></i></button></a>";
+   
+                    // Delete Button
+                    // $deleteButton = "<button class='btn btn-sm btn-danger deleteUser' data-id='".$row->id."'><i class='fa-solid fa-trash'></i></button>";
+   
+                    return $updateButton;
+   
+               }) 
+               ->make(true);
+                
+        }
+
+        return view('productlist')->with('categories',$categories);
     }
 }

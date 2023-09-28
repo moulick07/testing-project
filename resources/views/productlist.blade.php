@@ -82,7 +82,7 @@
                 <div class="title">
                     <i class="uil uil-tachometer-fast-alt"></i>
                     <div class="topnav">
-                       <h5><a>Category Listing</a> 
+                       <h5><a>Product Listing</a> 
                
 
                     </div>
@@ -102,24 +102,31 @@
                     <div class="row d-flex justify-content-center">
                         <div class="col-xl-7 col-lg-8 col-md-9 col-11 text-center">
                             <div class="d-flex justify-content-end">
-                                <a href="{{ route('category') }}" class="mb-3">
+                                <a href="{{ route('addproduct') }}" class="mb-3">
                                     <button type="button" class="btn btn-outline-danger">Add Category</button>
                                 </a>
                             </div>
-                            
-                            <table class="table table-bordered table-striped data-table" id="empTable">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Title</th>
-                                        <th>Description</th>
-                                        <th>Parent Category</th>
-                                        <th width="105px">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
+                        
+                        
+                                            <table id="datatable" class="table table-bordered dt-responsive w-100 dataTable no-footer dtr-inline data-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="align-middle">Id</th>
+                                                        <th class="align-middle">Name</th>
+                                                        <th class="align-middle">Brand</th>
+                                                        <th class="align-middle">parent_product</th>
+                                                        <th class="align-middle">short_description</th>
+                                                        <th class="align-middle">Images</th>
+                                                        <th class="align-middle">Price</th>
+                                                        <th class="align-middle">in Stock</th>
+                                                        <th class="align-middle">is_active </th>
+                                                        <th class="align-middle">action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                        
 
                         </div>
                     </div>
@@ -129,7 +136,7 @@
                 <!--edit category model-->
 
                 <!-- Modal -->
-                <div id="updateModal" class="modal fade" role="dialog">
+                {{-- <div id="updateModal" class="modal fade" role="dialog">
                     <div class="modal-dialog">
 
                         <!-- Modal content-->
@@ -180,7 +187,7 @@
                         </div>
 
                     </div>
-                </div>
+                </div> --}}
                 
                 <!-- end edit category model -->
 
@@ -207,33 +214,70 @@
 <script>
     $(function() {
 
-        var table = $('.data-table').DataTable({
+     
+        var table = $('#datatable').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ route('getData') }}",
+            ajax: "{{ route('productList') }}",
             columns: [{
-                    data: 'id',
-                    name: 'id'
-                },
-                {
-                    data: 'title',
-                    name: 'title'
-                },
-                {
-                    data: 'description',
-                    name: 'description'
-                },
-                {
-                    data: 'parent_category',
-                    name: 'parent_category'
-                },
-                {
-                    data: 'action',
-                    name: 'action',
-                    orderable: false,
-                    searchable: false
-                },
-            ]
+                data: 'id',
+                name: 'id',
+                
+                searchable: false,
+            },
+            {
+                data: 'name',
+                name: 'name',
+                
+            },
+            {
+                data: 'brand', 
+                name: 'brand',
+                
+                orderable: false
+            },
+            {
+                data: 'parent_product', 
+                name: 'parent_product',
+                
+                orderable: false},
+            {
+                data: 'short_description',
+                name: 'short_description',
+                
+                searchable: false
+            },
+            {
+                data: 'images',
+                name: 'images',
+               
+                searchable: false,
+                orderable: false,
+            },
+            {
+                data: 'price',
+                name: 'price',
+               
+                searchable: false
+            },
+            
+            {
+                data: 'in_stock',
+                name: 'in_stock',
+            },
+            {
+                data: 'is_active',
+                name: 'is_active',
+                orderable: false,
+                searchable: false
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            },
+        ],
         });
 
     });

@@ -93,99 +93,7 @@
                     <a href=""></a> <span class="text">Category detail</span>
 
                 </div>
-                <div class="row">
-                    <div class="col-12">
-                        <a href="" class="btn ">Category Detail</a>
-
-                        {{-- <a href="{{ url('addVariation/'.$detailcategory[0]->id) }}" class="btn ">Add Variation</a> --}}
-                        <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#exampleModal">
-                            Add Variation
-                        </button>
-
-                 
-                        <!-- Modal -->
-                        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
-                            aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Add Variation</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <form action="{{ url('variation-added/' . $detailcategory[0]->id) }}" id="variationform"
-                                        method="GET">
-                                        {{ csrf_field() }}
-                                        <div class="modal-body gap-4">
-                                            <div class="form-group row mb-3">
-                                                <label for="title" class="col-sm-4 col-form-label">Title</label>
-                                                <div class="col-sm-8">
-                                                    <input type="text" id="title" name="title"
-                                                        class="form-control" placeholder="Enter title" >
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group row mb-3">
-                                                <label for="value" class="col-sm-4 col-form-label">Value</label>
-                                                <div class="col-sm-8">
-                                                    <input type="text" id="value" name="value"
-                                                        class="form-control" placeholder="Enter value" >
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group row mb-3">
-                                                <label for="type" class="col-sm-4 col-form-label">Type</label>
-                                                <div class="col-sm-8">
-                                                    <input type="text" id="type" name="type"
-                                                        class="form-control" placeholder="Enter Type">
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group row mb-3">
-                                                <label for="prefix" class="col-sm-4 col-form-label">Prefix</label>
-                                                <div class="col-sm-8">
-                                                    <input type="text" id="prefix" name="prefix"
-                                                        class="form-control" placeholder="Enter prefix">
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group row mb-3">
-                                                <label for="postfix" class="col-sm-4 col-form-label">Postfix</label>
-                                                <div class="col-sm-8">
-                                                    <input type="text" id="postfix" name="postfix"
-                                                        class="form-control" placeholder="Enter Postfix">
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group row mb-3">
-                                                <label class="col-sm-4 col-form-label">Countable:</label>
-                                                <div class="col-sm-8">
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio"
-                                                            name="countable" id="countableYes" value="1">
-                                                        <label class="form-check-label" for="countableYes">Yes</label>
-                                                    </div>
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio"
-                                                            name="countable" id="countableNo" value="0">
-                                                        <label class="form-check-label" for="countableNo">No</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <button type="submit" class="btn btn-primary">Submit</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                        {{-- Modal end here --}}
-
-                    </div>
-                </div>
+               
 
                 <div class="row mt-5">
                     <div class="col-12">
@@ -197,19 +105,20 @@
                                         <tr>
                                             <th class="align-middle">title</th>
                                             <th class="align-middle">Description</th>
-                                            <th class="align-middle">is_parent</th>
+                                            <th class="align-middle">Price</th>
                                             <th class="align-middle">Parent_category</th>
                                             <th class="align-middle">Action</th>
 
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($detailcategory as $detailcategory)
+                                        @foreach ($detailproduct as $detailproduct)
+                                        
                                             <tr>
-                                                <td>{{ $detailcategory->title }}</td>
-                                                <td>{{ $detailcategory->description }}</td>
-                                                <td>{{ $detailcategory->is_parent }}</td>
-                                                <td>{{ $detailcategory->parent_category }}</td>
+                                                <td>{{ $detailproduct->name }}</td>
+                                                <td>{{ $detailproduct->short_description }}</td>
+                                                <td>{{ $detailproduct->price }}</td>
+                                                <td>{{ $detailproduct->parent_product }}</td>
                                                 <td><button type="button" class="btn " data-bs-toggle="modal"
                                                         data-bs-target="#exampleModal1">
                                                         <i class="fa fa-edit" style="font-size:24px"></i>
@@ -233,7 +142,7 @@
             </div>
 
             {{-- edit modal --}}
-            <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog"
+            {{-- <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog"
                 aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -295,12 +204,12 @@
                         </form>
                     </div>
                 </div>
-            </div>
+            </div> --}}
             {{-- end edit modal --}}
 
             {{-- delete modal --}}
             {{-- !-- Delete Warning Modal -->  --}}
-            <div class="modal fade" id="deletemodal">
+            {{-- <div class="modal fade" id="deletemodal">
                 <div class="modal-dialog">
                     <form action="{{ url('deleteCategory/'.$detailcategory->id) }}" method="POST">
                         {{ csrf_field() }}
@@ -321,7 +230,7 @@
                             </div>
                     </form>
                 </div>
-            </div>
+            </div> --}}
         </div>
         {{-- end edit modal  --}}
         </div>
