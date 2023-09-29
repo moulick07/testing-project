@@ -45,7 +45,7 @@
                         <i class="uil uil-files-landscapes"></i>
                         <span class="link-name">Product</span>
                     </a></li>
-                <li><a href="{{ route('getCategorydata') }}">
+                <li><a href="{{ route('getData') }}">
                         <i class="uil uil-chart"></i>
                         <span class="link-name">Category</span>
                     </a></li>
