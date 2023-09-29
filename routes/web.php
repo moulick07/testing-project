@@ -33,8 +33,12 @@ Route::group(['middleware' => ['admin']], function () {
    Route::get('/addproduct', [ProductController::class, 'index'])->name('addproduct');
    Route::post('/save-product', [ProductController::class, 'saveProduct'])->name('saveproduct');
    Route::post('/fetch-subcategory', [ProductController::class, 'subCategory'])->name('subCategory');
+   Route::post('/fetch-variant', [ProductController::class, 'Variant'])->name('Variant');
    Route::get('/product-list', [ProductController::class, 'productView'])->name('productList');
    Route::get('/detailProduct/{id}', [ProductController::class, 'detailProductData'])->name('getProductDetail');
+   Route::get('/editProduct/{id}', [ProductController::class, 'editProduct'])->name('editProduct');
+   Route::post('/deleteProduct/{id}', [ProductController::class, 'deleteProduct'])->name('deleteProduct');
+   Route::post('/updateProduct/{id}', [ProductController::class, 'updateProduct'])->name('updateProduct');
 
 
 });

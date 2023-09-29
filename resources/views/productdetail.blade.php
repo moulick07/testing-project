@@ -90,7 +90,7 @@
             <div class="overview">
                 <div class="title">
                     <i class="uil uil-tachometer-fast-alt"></i>
-                    <a href=""></a> <span class="text">Category detail</span>
+                    <a href=""></a> <span class="text">Product detail</span>
 
                 </div>
                
@@ -104,22 +104,28 @@
                                     <thead>
                                         <tr>
                                             <th class="align-middle">title</th>
-                                            <th class="align-middle">Description</th>
+                                            <th class="align-middle">short Description</th>
                                             <th class="align-middle">Price</th>
+                                            <th class="align-middle">Discounted Price</th>
                                             <th class="align-middle">Parent_category</th>
+                                            <th class="align-middle">Stock</th>
+                                            <th class="align-middle">Brand</th>
                                             <th class="align-middle">Action</th>
 
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($detailproduct as $detailproduct)
+                                       
                                         
                                             <tr>
                                                 <td>{{ $detailproduct->name }}</td>
                                                 <td>{{ $detailproduct->short_description }}</td>
                                                 <td>{{ $detailproduct->price }}</td>
+                                                <td>{{ $detailproduct->discounted_price }}</td>
                                                 <td>{{ $detailproduct->parent_product }}</td>
-                                                <td><button type="button" class="btn " data-bs-toggle="modal"
+                                                <td>{{ $detailproduct->in_stock }}</td>
+                                                <td>{{ $detailproduct->brand }}</td>
+                                                <td><a href="{{ url('editProduct/'.$detailproduct->id) }}"><button type="button" class="btn " data-bs-toggle="modal"
                                                         data-bs-target="#exampleModal1">
                                                         <i class="fa fa-edit" style="font-size:24px"></i>
                                                     </button></a>
@@ -129,7 +135,7 @@
                                                         <i class="fa fa-trash" aria-hidden="true"></i></i>
                                                     </button>
                                                 </td>
-                                        @endforeach
+                                            </tr>
 
 
                                     </tbody>
@@ -139,6 +145,7 @@
                         </div>
                     </div>
                 </div>
+               
             </div>
 
             {{-- edit modal --}}
@@ -147,37 +154,36 @@
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Edit category</h5>
+                            <h5 class="modal-title" id="exampleModalLabel">Edit Product</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
+                                <span aria-hidden="true">X</span>
                             </button>
                         </div>
-                        <form action="{{ url('updateCategory/' . $detailcategory->id) }}" id="EditForm" method="POST">
+                        <form action="{{ url('updateProduct/' . $detailproduct->id) }}" id="EditForm" method="POST">
                             {{ csrf_field() }}
                             <div class="modal-body gap-4">
                                 <div class="form-group row mb-3">
                                     <label for="title" class="col-sm-4 col-form-label">Title</label>
                                     <div class="col-sm-8">
                                         <input type="text" id="title" name="title" class="form-control"
-                                            value="{{ $detailcategory->title }}"
-                                            placeholder="{{ $detailcategory->title }}" >
+                                            value="{{ $detailproduct->name }}"
+                                            placeholder="{{ $detailproduct->name }}" >
                                     </div>
                                 </div>
 
                                 <div class="form-group row mb-3">
-                                    <label for="description" class="col-sm-4 col-form-label">Description</label>
+                                    <label for="description" class="col-sm-4 col-form-label">short description</label>
                                     <div class="col-sm-8">
                                         <input type="text" id="value" name="description" class="form-control"
-                                            value="{{ $detailcategory->description }}" >
+                                            value="{{ $detailproduct->short_description }}" >
                                     </div>
                                 </div>
 
                                 <div class="form-group row mb-3">
-                                    <label for="parent_category" class="col-sm-4 col-form-label">Parent
-                                        Category</label>
+                                    <label for="parent_category" class="col-sm-4 col-form-label">Long Description</label>
                                     <div class="col-sm-8">
                                         <input type="text" id="postfix" name="parent_category"
-                                            class="form-control" value="{{ $detailcategory->parent_category }}">
+                                            class="form-control" value="{{ $detailproduct->long_description }}">
                                     </div>
                                 </div>
 
@@ -187,13 +193,13 @@
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="is_parent"
                                                 id="countableYes" value='1'
-                                                {{ $detailcategory->is_parent == '1' ? 'checked' : '' }}>
+                                                {{ $detailproduct->is_parent == '1' ? 'checked' : '' }}>
                                             <label class="form-check-label" for="countableYes">Yes</label>
                                         </div>
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="is_parent"
                                                 id="countableNo" value='0'
-                                                {{ $detailcategory->is_parent == '0' ? 'checked' : '' }}>
+                                                {{ $detailproduct->is_parent == '0' ? 'checked' : '' }}>
                                             <label class="form-check-label" for="countableNo">No</label>
                                         </div>
                                     </div>
@@ -209,9 +215,9 @@
 
             {{-- delete modal --}}
             {{-- !-- Delete Warning Modal -->  --}}
-            {{-- <div class="modal fade" id="deletemodal">
+            <div class="modal fade" id="deletemodal">
                 <div class="modal-dialog">
-                    <form action="{{ url('deleteCategory/'.$detailcategory->id) }}" method="POST">
+                    <form action="{{ url('deleteProduct/'.$detailproduct->id) }}" method="POST">
                         {{ csrf_field() }}
                         <div class="modal-content">
                             <div class="modal-header">
@@ -230,7 +236,7 @@
                             </div>
                     </form>
                 </div>
-            </div> --}}
+            </div>
         </div>
         {{-- end edit modal  --}}
         </div>

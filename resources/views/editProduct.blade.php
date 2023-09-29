@@ -27,7 +27,7 @@
                 <img src="images/logo.png" alt="">
             </div>
 
-            <span class="logo_name">CodingLab</span>
+            <span class="logo_name">EditProduct</span>
         </div>
 
         <div class="menu-items">
@@ -81,10 +81,7 @@
 
         <div class="dash-content">
             <div class="overview">
-                <div class="title">
-                    <i class="uil uil-tachometer-fast-alt"></i>
-                    <span class="text">Dashboard</span>
-                </div>
+               
 
 
                 <div class="container-xxl flex-grow-1 container-p-y">
@@ -92,7 +89,7 @@
 
 
                     <h4 class="py-3 mb-4">
-                        <span class="text-muted fw-light">eCommerce /</span><span> Add Product</span>
+                        <span class="text-muted fw-light">eCommerce /</span><span> Edit Product</span>
                     </h4>
 
                     <div class="app-ecommerce">
@@ -102,12 +99,12 @@
                             class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3">
 
                             <div class="d-flex flex-column justify-content-center">
-                                <h4 class="mb-1 mt-3">Add a new Product</h4>
+                                <h4 class="mb-1 mt-3">Edit product</h4>
                                 <p>Orders placed across your store</p>
                             </div>
 
                         </div>
-                        <form class="w-px-500 p-3 p-md-3" action="{{ route('saveproduct') }}" method="post"
+                        <form class="w-px-500 p-3 p-md-3" action="{{ url('updateProduct/'.$product->id ) }}" method="post"
                             enctype="multipart/form-data">
                             @csrf
 
@@ -123,7 +120,7 @@
                                         <div class="card-body">
                                             <div class="form-floating form-floating-outline mb-4">
                                                 <input type="text" class="form-control" placeholder="Product title"
-                                                    name="title" value="{{ Request::old('title') }}"
+                                                    name="title" value="{{ $product->name }}"
                                                     aria-label="Product title">
                                                 @error('title')
                                                     <div class="error" style="color: red;">{{ $message }}</div>
@@ -136,7 +133,7 @@
                                                 <div class="col">
                                                     <div class="form-floating form-floating-outline">
                                                         <input type="number" class="form-control" placeholder="00000"
-                                                            name="instock" value="{{ Request::old('instock') }}"
+                                                            name="instock" value="{{ $product->in_stock }}"
                                                             aria-label="Product SKU">
                                                         @error('instock')
                                                             <div class="error" style="color: red;">{{ $message }}
@@ -149,7 +146,7 @@
                                                     <div class="form-floating form-floating-outline">
                                                         <input type="text" class="form-control"
                                                             placeholder="0123-4567"
-                                                            value="{{ Request::old('short_description') }}"
+                                                            value="{{ $product->short_description }}"
                                                             name="short_description" aria-label="Product barcode">
                                                         @error('short_description')
                                                             <div class="error" style="color: red;">{{ $message }}
@@ -163,6 +160,7 @@
                                             <div class="col">
                                                 <div class="form-floating form-floating-outline">
                                                     <textarea type="text" class="form-control" placeholder="0123-4567" name="long_description"
+                                                    aria-valuetext="{{ $product->value }}"
                                                         aria-label="Product barcode">
                                                 </textarea>
                                                     @error('long_description')
@@ -218,31 +216,43 @@
                                             <div class="row clone-row">
                                                 <div class="col-md-5 mb-4">
                                                     <label class="form-label">Option</label>
-                                                    <select class="form-control form-control-sm"  id="variant" name="Variant[]"
-                                                         disabled>
+                                                    @foreach ($variant as $variant)
+                                                    
+                                                    <select class="form-control form-control-sm mb-4"  id="variant" name="Variant[]"
+                                                         >
                                                         <option value="">-- Select Variation --</option>
-                                                    </select>
-                                                    @error('variant')
+                                                        
+                                                        <option value="{{ $variant->id }}"
+                                                            {{ $variant->id == $variant->id ? 'selected' : '' }}>
+                                                            {{ $variant->title }}</option>
+                                                            
+                                                        </select>
+                                                        @error('variant')
                                                         <div class="error" style="color: red;">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
+                                                        @enderror
+                                                        @endforeach
+                                                    </div>
                                                 <div class="col-md-5 mb-4">
                                                     <label class="form-label">add Value</label>
+                                                    @foreach ($value as $value)
+                                                  
                                                     <input type="text" name="value[]"
-                                                        value="{{ Request::old('value[]') }}" id="value"
-                                                        class="form-control form-control-sm" disabled>
+                                                        id="value" value="{{ $value->value }}"
+                                                        class="form-control form-control-sm mb-4" >
+                                                      
                                                     @error('value')
                                                         <div class="error" style="color: red;">{{ $message }}</div>
                                                     @enderror
+                                                    @endforeach
                                                 </div>
                                                 <div class="col-md-1" style="margin-top:27px;">
                                                     <span
                                                         class="btn btn-danger btn-xs pull-right btn-del-select py-0">Remove</span>
                                                 </div>
                                             </div>
-                                            <div class="col-md-2" style="margin-left: 5px;">
+                                            {{-- <div class="col-md-2" style="margin-left: 5px;">
                                                 <span class="btn btn-secondary btn-xs add-select py-0">Add More</span>
-                                            </div>
+                                            </div> --}}
 
 
 
@@ -263,7 +273,7 @@
                                             <!-- Base Price -->
                                             <div class="form-floating form-floating-outline mb-4">
                                                 <input type="number" class="form-control" placeholder="Price"
-                                                    name="price" value="{{ Request::old('price') }}"
+                                                    name="price" value="{{ $product->price }}"
                                                     aria-label="Product price">
                                                 @error('price')
                                                     <div class="error" style="color: red;">{{ $message }}</div>
@@ -275,7 +285,7 @@
                                             <div class="form-floating form-floating-outline mb-4">
                                                 <input type="number" class="form-control"
                                                     placeholder="Discounted Price" name="discount_price"
-                                                    value="{{ Request::old('discount_price') }}"
+                                                    value="{{ $product->discounted_price }}"
                                                     aria-label="Product discounted price">
                                                 @error('discount_price')
                                                     <div class="error" style="color: red;">{{ $message }}</div>
@@ -302,7 +312,7 @@
                                                         <div class="form-floating form-floating-outline mb-4">
                                                             <input type="text" class="form-control"
                                                                 placeholder="Discounted Price" name="merchant"
-                                                                value="{{ Request::old('merchant') }}"
+                                                                value="{{ $product->brand }}"
                                                                 aria-label="Product">
                                                             @error('merchant')
                                                                 <div class="error" style="color: red;">
@@ -319,9 +329,11 @@
                                                             name="category" aria-hidden="true">select parent category
                                                             <option value="">-- Select Parent category --</option>
 
+                                                            
 
                                                             @foreach ($parentCategory as $parentCategory)
-                                                                <option value="{{ $parentCategory->id }}">
+                                                                <option value="{{ $parentCategory->id }}"
+                                                                    {{ $parentCategory->id == $parentCategory->id ? 'selected' : '' }}>
                                                                     {{ $parentCategory->title }}</option>
                                                             @endforeach
                                                         </select>
@@ -330,11 +342,15 @@
                                                             </div>0
                                                         @enderror
                                                         <div class="form-group mt-5">
-                                                            <div class="error" style="color: red;">select parent category first
+                                                            {{-- <div class="error" style="color: red;">select parent category first --}}
                                                             </div>
-                                                            <select id="sub-category" name="parent_product" class="select2 form-control form-select select2-hidden-accessible " disabled>
+                                                            <select id="sub-category" name="parent_product" class="select2 form-control form-select select2-hidden-accessible ">
 
-                                                                <option value="">-- Select sub category --</option>
+                                                                @foreach ($subCategory as $subCategory)
+                                                                <option value="{{ $subCategory->id }}"
+                                                                    {{ $subCategory->id == $subCategory->id ? 'selected' : '' }}>
+                                                                    {{ $subCategory->title }}</option>
+                                                                    @endforeach
                                                             </select>
                                                         </div>
                                                     </div>
@@ -416,31 +432,9 @@
                    }
                });
 
-               $('#variant').removeAttr('disabled');
-               $('#value').removeAttr('disabled');
+               
               
-               $("#variant").html('');
-               $.ajax({
-                   url: "{{url('fetch-variant')}}",
-                   type: "POST",
-                   data: {
-                       parent_id: parent_category,
-                       
-                   },
-                   dataType: 'json',
-                   success: function (result) {
-                    console.log(result);
-                       $('#variant').html('<option  value="">-- Select Variant --</option>');
-                     
-                       $.each(result.variant, function (key, value) {
-                            // console.log(key);
-                           $("#variant").append('<option name="Variant[]" value="' + value
-                               .id + '">' + value.title + '</option>');
-                       });
-                       
-                   }
-               });
-
+              
            });
 
 

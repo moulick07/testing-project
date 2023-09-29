@@ -11,18 +11,18 @@ class Product extends Model
     protected $fillable = [
         'name',
         'price',
-        'short-description',
-        'discounted-price',
-        'in-stock',
+        'short_description',
+        'discounted_price',
+        'in_stock',
         'is_active',
         'brand',
-        'cover-image',
-        'main-category',
+        'cover_image',
+        'main_category',
         'parent_product',
         'images',
         'value',
         'variant',
-        'long-description',
+        'long_description',
         
     ];
 }
