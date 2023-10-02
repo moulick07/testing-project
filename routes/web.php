@@ -11,10 +11,10 @@ use App\Http\Controllers\ProductController;
     return view('welcome');
 });
 
-Auth::routes();
+
 
 Route::get('home', [HomeController::class, 'index'])->name('home'); 
-Route::group(['middleware' => ['admin']], function () {
+
    Route::get('admin-home', [HomeController::class, 'adminHome'])->name('admin.home');
    Route::get('category',[CategoryController::class,'index'])->name('category');
    Route::get('save',[CategoryController::class,'save'])->name('save-category');
@@ -38,11 +38,4 @@ Route::group(['middleware' => ['admin']], function () {
    Route::get('/detailProduct/{id}', [ProductController::class, 'detailProductData'])->name('getProductDetail');
    Route::get('/editProduct/{id}', [ProductController::class, 'editProduct'])->name('editProduct');
    Route::post('/deleteProduct/{id}', [ProductController::class, 'deleteProduct'])->name('deleteProduct');
-   Route::post('/updateProduct/{id}', [ProductController::class, 'updateProduct'])->name('updateProduct');
-
-
-});
-Route::get('/logout', function(){
-        Auth::logout();
-        return Redirect::to('login');
-     })->name('logout.user');
+   Route::post('/updateProduct/{id}', [ProductController::class, 'updateProduct'])->name('updateProduct');  

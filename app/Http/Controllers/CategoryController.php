@@ -2,32 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCategoryRequest;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Datatables;
 class CategoryController extends Controller
 {
     public function index(){
-        $categories= Category::all();
-        return view('category')->with('categories',$categories);
+       
     }
-    public function save(Request $request){
+    public function save(StoreCategoryRequest $request){
         $input = $request->all();
         $categories= Category::all();
 
-        $request->validate([
-            'title' => 'required',
-            'Description' => 'required|max:255',
-            'is_parent' => 'required',
-            'parent-cat' => 'required',
-        ]);
-        Category::create([
-            'title'=>$request->input('title'),
-            'description'=>$request->input('Description'),
-            'is_parent'=>$request->input('is_parent'),
-            'parent_category'=>$request->input('parent-cat'),
-
-        ]);
+        
+        Category::create($input);
     
         return redirect('category-list')->with(['success' => true, 'message' => 'successfully Category created'], 200)->with('categories',$categories);
     }

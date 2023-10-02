@@ -4,30 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\VariationTable;
+use App\Models\Category;
+use App\Http\Requests\StoreVariationRequest;
 class variationController extends Controller
 {
-    public function variationSave(Request $request , $id){
+    public function variationSave(StoreVariationRequest $request ,$id){
         $input = $request->all();
-       $validator =  $request->validate([
-            'title' => 'required',
-            'type'=>'required',
-            'prefix' => 'required',
-            'postfix' => 'required',
-            'countable' => 'required',
-            'value' => 'required',
-        ]);
-       
-       
+        $input['category_id'] = $id;
 
-           VariationTable::create([
-               'title'=>$request->input('title'),
-               'type'=>$request->input('type'),
-               'prefix'=>$request->input('prefix'),
-               'postfix'=>$request->input('postfix'),
-               'countable'=>$request->input('countable'),
-               'value'=>$request->input('value'),
-               'category_id'=>$id,
-           ]);
+        $category = Category::find($id)->first();
+      
+           VariationTable::create($input);
            return back();
     
     }

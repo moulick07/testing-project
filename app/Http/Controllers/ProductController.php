@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreProductRequest;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\Product;
@@ -20,63 +21,35 @@ class ProductController extends Controller
         return view('addProduct')->with('parentCategory',$parentCategory);
     }
 
-    public function saveProduct(Request $request){
+    public function saveProduct(StoreProductRequest $request){
         $categories= Product::all();
             // dd($request->all());
-       $validator =  Validator::make($request->all(),[
-            'title' => 'required',
-            'short_description' => 'required|max:255',
-            'long_description' => 'required',
-            'instock' => 'required',
-            'price'=> 'required',
-            'discount_price'=> 'required',
-            'merchant'=> 'required',
-            'category'=> 'required',
-            'product_image.*' => 'required|mimes:png,jpg,jpeg,webp|max:2048',
-            'cover_image' => 'required|mimes:png,jpg,jpeg,webp|max:2048',
-            'value' => 'required',
-            'parent_product'=>'required',
-        ]);
-        
-       
-        if ($validator->fails()) {
-             return redirect('/addproduct')->withErrors($validator); 
-        }
-        else{
+            $input = $request->all();
+            
+            $ProductCoverimage = $input['cover_image'];
+            $Productitleimage = $input['images'];
+            // dd($input);
+  
+
             $files = [];
-            foreach($request->file('product_image') as $key=>$file)
+            foreach($Productitleimage as $key=>$file)
             {
                 $name = time().'.'.$file->extension();
-                $files[] = $name;  
-                // for($i=0;$i<=count($files);$i++){
+                $files[] = $name;
 
                     $file->move(public_path('images/ProductImage'), end($files));
-                // }
             } 
-            $coverImageName = time().'.'.$request->cover_image->extension();
+            $input['images'] = implode(",",$files);
+            // dd($files); 
+            $coverImageName = time().'.'.$ProductCoverimage->extension();
             
-            $request->cover_image->move(public_path('images/CoverImage'), $coverImageName);
+           $ProductCoverimage->move(public_path('images/CoverImage'), $coverImageName);
+           $input['cover_image'] = $coverImageName;
           
+           Product::create($input);
 
-        Product::create([
-            'name'=>$request->input('title'),
-            'short_description'=>$request->input('short_description'),
-            'long_description'=>$request->input('long_description'),
-            'in_stock'=>$request->input('instock'),
-            'price'=>$request->input('price'),
-            'discounted_price'=>$request->input('discount_price'),
-            'brand'=>$request->input('merchant'),
-            'variant'=>implode(',',$request->input('Variant')),
-            'value'=>implode(',',$request->input('value')),
-            'parent_product'=>$request->input('parent_product'),
-            'main_category'=>$request->input('category'),
-            'is_active'=>1,
-            'cover_image'=>$coverImageName,
-            'images'=>implode(',',$files),
-
-        ]);
             return redirect('addproduct')->with(['success' => true, 'message' => 'successfully Product created'], 200);
-        }   
+           
       
                   
 
@@ -97,7 +70,7 @@ class ProductController extends Controller
         return response()->json($data);
     }
 
-    public function Variant(Request $request){
+    public function variant(Request $request){
       
         $data['variant'] = VariationTable::where('category_id',$request->parent_id)->get(['title','id']);
         return response()->json($data);
@@ -209,6 +182,7 @@ class ProductController extends Controller
             return redirect('product-list')->with(['success' => true, 'message' => 'successfully Product updated'], 200);
         }   
       
+
                   
 
         
