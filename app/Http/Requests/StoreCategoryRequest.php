@@ -25,9 +25,9 @@ class StoreCategoryRequest extends FormRequest
         return [
            
                 'title' => 'required',
-                'Description' => 'required|max:255',
+                'description' => 'required|max:255',
                 'is_parent' => 'required',
-                'parent-cat' => 'required',
+                'parent_category' => 'required',
           
         ];
     }
@@ -36,9 +36,9 @@ class StoreCategoryRequest extends FormRequest
     {
         return [
             "title.required" => "Please Write a title",
-            "Description.required" => "Please write some description",
+            "description.required" => "Please write some description",
             "is_parent.requried" => "Please select whether category is parent or not",
-            "parent-cat.requried" => "Please select parent category",
+            "parent_category.requried" => "Please select parent category",
         ];
     }
 }

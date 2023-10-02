@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryApiController;
 use App\Http\Controllers\ProductApiController;
 
 use Illuminate\Http\Request;
@@ -24,3 +25,4 @@ Route::get('/hello', function () {
   });
 
 Route::apiResource('/product', ProductApiController::class);
+Route::apiResource('/category', CategoryApiController::class);

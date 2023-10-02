@@ -13,7 +13,7 @@ class CategoryApiController extends Controller
     public function index()
     {
         $categories= Category::all();
-        return view()->with('categories',$categories);
+       return response()->json($categories);
     }
 
     /**
@@ -21,13 +21,15 @@ class CategoryApiController extends Controller
      */
     public function store(StoreCategoryRequest $request)
     {
-        $input = $request->all();
-        $categories= Category::all();
-
-        
-        Category::create($input);
     
-        return redirect('')->with(['success' => true, 'message' => 'successfully Category created'], 200)->with('categories',$categories);
+        $input = $request->all();
+        $category =  Category::create($input);
+    
+        return [
+            "status" => 1,
+            "msg" => "category added successfully",
+            "data" =>$category
+        ];
         
     }
 
@@ -36,9 +38,11 @@ class CategoryApiController extends Controller
      */
     public function show(Category $category)
     {
-        $detailCategory = Category::find($category);
-      
-        return view()->with('detailCategory',$detailCategory);
+        return [
+            "status" => 1,
+            "data" =>$category
+        ];
+
     }
 
     /**
@@ -46,29 +50,13 @@ class CategoryApiController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        $updatingcategory = Category::find($category->getKey());
+           $category->update($request->all());
 
-        $response = array();
-        if(!empty($updatingcategory)){
-             $updata['title'] = $request->post('title');
-             $updata['description'] = $request->post('description');
-             $updata['is_parent'] = $request->post('is_parent');
-             $updata['parent_category'] = $request->post('parent_category');
-
-             if($updatingcategory->update($updata)){
-                  $response['success'] = 1;
-                  $response['msg'] = 'Update successfully'; 
-             }else{
-                  $response['success'] = 0;
-                  $response['msg'] = 'Record not updated';
-             }
-
-        }else{
-             $response['success'] = 0;
-             $response['msg'] = 'Invalid ID.';
-        }
-
-        return back(); 
+        return [
+            "status" => 1,
+            "data" => $category,
+            "msg" => "Category updated successfully"
+        ];
     }
 
     /**
@@ -76,17 +64,11 @@ class CategoryApiController extends Controller
      */
     public function destroy(Category $category)
     {
-
-        $delete_cat = Category::find($category);
-
-        if($delete_cat->delete()){
-            $response['success'] = 1;
-            $response['msg'] = 'Delete successfully'; 
-        }else{
-            $response['success'] = 0;
-            $response['msg'] = 'Invalid ID.';
-        }
-
-        return redirect()->with(['success' => true, 'message' => 'successfully Category delete'], 200);
+        $category->delete();
+        return [
+            "status" => 1,
+            "data" => $category,
+            "msg" => "Category deleted successfully"
+        ];
     }
 }

@@ -100,9 +100,7 @@ class ProductApiController extends Controller
      */
     public function destroy(Product $product)
     {
-        $categories = Product::all();
-
-
+        
 
         $product->delete();
         return [
