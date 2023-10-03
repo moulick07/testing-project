@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\category\updateCategoryRequest;
 use Illuminate\Http\Request;
 use App\Http\Requests\category\StoreCategoryRequest;
 use App\Models\Category;
@@ -28,15 +29,14 @@ class CategoryController extends Controller
      */
     public function store(StoreCategoryRequest $request)
     {
-        
         try {
-        $input = $request->all();
-        $category =  Category::create($input);
+        $category =  Category::create($request->all());
         $response = [
             'type' => 'success',
             'code' => 200,
             'message' => "Category store successfully",
             'data' => $category
+           
         ];
 
         return response()->json($response,200);
@@ -59,25 +59,30 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        return [
-            "status" => 1,
-            "data" =>$category
+        $response = [
+            'type' => 'success',
+            'code' => 200,
+            'message' => "Detail",
+            'data' => $category
         ];
+
+        return response()->json($response,200);
+
+ 
 
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Category $category)
+    public function update(updateCategoryRequest $request, Category $category)
     {
         try {
-            $input = $request->all();
-            $category =  Category::update($input);
+            $category->update($request->all());
             $response = [
                 'type' => 'success',
                 'code' => 200,
-                'message' => "Updated Succefully",
+                'message' => "Updated Successfully",
                 'data' => $category
             ];
     
@@ -101,20 +106,20 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         try {
-        $category->delete();
-        $response =  [
-            "type" => "success",
-            "code"=> 200,
-            "msg" => "Category deleted successfully"
-        ];
-        return response()->json($response,200);
-    } catch (\Throwable $th) {
-        $response = [
-            'type' => 'error',
-            'code' => 500,
-            'message' =>  $th->getMessage()
-        ];
-        return response()->json($response, 500);
-    }
+            $category->delete();
+            $response =  [
+                "type" => "success",
+                "code"=> 200,
+                "message" => "Category deleted successfully"
+            ];
+            return response()->json($response,200);
+        } catch (\Throwable $th) {
+            $response = [
+                'type' => 'error',
+                'code' => 500,
+                'message' =>  $th->getMessage()
+            ];
+            return response()->json($response, 500);
+        }
     }
 }

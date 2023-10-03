@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\product\StoreProductRequest;
 use App\Http\Requests\product\updateProductRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Category;
 use App\Models\Product;
 
@@ -15,7 +16,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $Product = Product::paginate(20);
+        $Product = Product::paginate(10);
         $response = [
             'type' => 'success',
             'code' => 200,
@@ -35,26 +36,26 @@ class ProductController extends Controller
         try {
 
             $input = $request->all();
-
-            $ProductCoverimage = $request['cover_image'];
+            
+            $ProductCoverimage = $input['cover_image'];
             $Productitleimage = $input['images'];
-
-
-
-
-
-
-
-            // $input['images'] = implode(",",$files);
-
-            $titleimage = time() . '.' . $Productitleimage->extension();
-            $coverImageName = time() . '.' . $ProductCoverimage->extension();
-
+          
+            $files = [];
+            foreach($Productitleimage as $key=>$file)
+            {
+                $titleimage = mt_rand(3,9).time() . '.' . $file->extension();
+               
+                $files[] = $titleimage;  
+                $file->move(public_path('images/ProductImage'), end($files));
+            } 
+            $coverImageName = mt_rand(3,9).time() . '.' . $ProductCoverimage->extension();
             $ProductCoverimage->move(public_path('images/CoverImage'), $coverImageName);
-            $Productitleimage->move(public_path('images/ProductImage'), $titleimage);
+           
 
-
-            $input = $request->all();
+            $input['images'] = implode(",",$files);
+            $input['cover_image'] = $coverImageName;
+            
+            $input['slug'] = Product::generateSlug($input['name']);
             $product = Product::create($input);
             $response = [
                 'type' => 'success',
@@ -79,11 +80,16 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Product $product)
     {
-        $detailproduct = Product::where('id', $id)->first();
+        $response = [
+            'type' => 'success',
+            'code' => 200,
+            'message' => "Detail",
+            'data' => $product
+        ];
 
-        return response()->json($detailproduct);
+        return response()->json($response,200);
 
     }
 
@@ -96,24 +102,36 @@ class ProductController extends Controller
       try{
 
       
-        $update_input = $request->all();
+        $input = $request->all();
+        // dd($input);
+        $ProductCoverimage = $input['cover_image'];
+        $Productitleimage = $input['images'];
+      
 
-        $ProductCoverimage = $request['cover_image'];
-        $Productitleimage = $update_input['images'];
-
-
-        $titleimage = time() . '.' . $Productitleimage->extension();
-        $coverImageName = time() . '.' . $ProductCoverimage->extension();
+        // $input['images'] = implode(",",$files);
+        $files = [];
+        foreach($Productitleimage as $key=>$file)
+        {
+            $titleimage = mt_rand(3,9).time() . '.' . $file->extension();
+           
+            $files[] = $titleimage;  
+            $file->move(public_path('images/ProductImage'), end($files));
+        } 
+        $coverImageName = mt_rand(3,9).time() . '.' . $ProductCoverimage->extension();
 
         $ProductCoverimage->move(public_path('images/CoverImage'), $coverImageName);
-        $Productitleimage->move(public_path('images/ProductImage'), $titleimage);
+       
 
+        $input['images'] = implode(',',$files);
+        $input['cover_image'] = $coverImageName;
+        $input['slug'] = Product::generateSlug($input['name']);
 
-        $product->update($request->all());
+        $product->update($input);
         return [
-            "status" => 200,
-            
-            "msg" => "Product updated successfully"
+            'type' => 'success',
+            'code' => 200,
+            'message' => "Product updated successfully",
+            'data' => $product
         ];
     }catch (\Throwable $th) {
 
@@ -133,13 +151,31 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-
-
-        $product->delete();
-        return [
-            "status" => 1,
-            "data" => $product,
-            "msg" => "Product deleted successfully"
-        ];
+        try {
+            if(file_exists(public_path('images/CoverImage/'.$product->cover_image)) ){
+                $image = explode(",",$product->images);
+                $length = count($image);
+                for ($i = 0; $i < $length; $i++) {
+                    unlink(public_path("images/ProductImage/".$image[$i]));
+                }
+                unlink(public_path('images/CoverImage/'.$product->cover_image));
+                
+                }
+            $product->delete();
+                $response =  [
+                    "type" => "success",
+                    "code"=> 200,
+                    "message" => "Product deleted successfully"
+                ];
+                return response()->json($response,200);
+            
+        } catch (\Throwable $th) {
+            $response = [
+                'type' => 'error',
+                'code' => 500,
+                'message' =>  $th->getMessage()
+            ];
+            return response()->json($response, 500);
+        }        
     }
 }

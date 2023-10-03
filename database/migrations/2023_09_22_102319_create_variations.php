@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('variation_tables', function (Blueprint $table) {
+        Schema::create('variations', function (Blueprint $table) {
             $table->uuid('id');
             $table->string('title');
             $table->string('type');

@@ -3,7 +3,9 @@
 namespace App\Http\Requests\category;
 
 use Illuminate\Foundation\Http\FormRequest;
-
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Validation\Rule;
 class updateCategoryRequest extends FormRequest
 {
     /**
@@ -21,9 +23,9 @@ class updateCategoryRequest extends FormRequest
      */
     public function rules(): array
     {
+        
         return [
-           
-            'title' => 'required',
+            'title' => ['required', Rule::unique('categories','title')->ignore($this->category)],
             'description' => 'required|max:255',
             'is_parent' => 'required',
             'parent_category' => 'required',
@@ -39,4 +41,20 @@ class updateCategoryRequest extends FormRequest
             "parent_category.requried" => "Please select parent category",
         ];
     }
+
+    protected function failedValidation(Validator $validator)
+    {
+        $response = [
+            'type' => 'error',
+            'code' => 422,
+            'message' => "Server Validation Fail",
+            'errors' =>$validator->errors()
+        ];
+
+        /**
+         * Return response data in json formate
+         */
+        throw new HttpResponseException(response()->json($response, 422));
+    }
+
 }

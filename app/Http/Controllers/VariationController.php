@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\updateVariationRequest;
-use Illuminate\Http\Request;
-use App\Models\VariationTable;  
 
-use App\Http\Requests\variation\StoreVariationRequest;
+use Illuminate\Http\Request;
+use App\Models\Variation;  
+
+use App\Http\Requests\variation\VariationRequest;
 class VariationController extends Controller
 {
     public function index()
     {
-        $variation = VariationTable::paginate(20);
+        $variation = Variation::paginate(20);
         $response = [
             'type' => 'success',
             'code' => 200,
@@ -25,16 +25,15 @@ class VariationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreVariationRequest $request)
+    public function store(VariationRequest $request)
     {
 
         try {
-            $input = $request->all();
-            $variation = VariationTable::create($input);
+            $variation = Variation::create($request->all());
             $response = [
                 'type' => 'success',
                 'code' => 200,
-                'message' => "Product store successfully",
+                'message' => "Variation store successfully",
                 'data' => $variation
             ];
 
@@ -54,29 +53,33 @@ class VariationController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Variation $variation)
     {
-        $detailproduct = VariationTable::where('id', $id)->first();
+        $response = [
+            'type' => 'success',
+            'code' => 200,
+            'message' => "Detailed Variation",
+            'data' => $variation
+        ];
 
-        return response()->json($detailproduct);
+        return response()->json($response,200);
 
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(updateVariationRequest $request, VariationTable $variation)
+    public function update(VariationRequest $request, Variation $variation)
     {
 
       try{
-
-      
-        
+       
         $variation->update($request->all());
         return [
-            "status" => 200,
-            
-            "msg" => "Variation updated successfully"
+            'type' => 'success',
+            'code' => 200,
+            'message' => "Variation updated successfully",
+            'data' => $variation
         ];
     }catch (\Throwable $th) {
 
@@ -94,16 +97,24 @@ class VariationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(VariationTable $variation)
+    public function destroy(Variation $variation)
     {
-
-
-        $variation->delete();
-        return [
-            "status" => 1,
-            "data" => $variation,
-            "msg" => "Variation deleted successfully"
-        ];
+        try {
+            $variation->delete();
+            $response =  [
+                "type" => "success",
+                "code"=> 200,
+                "message" => "Variation deleted successfully"
+            ];
+            return response()->json($response,200);
+        } catch (\Throwable $th) {
+            $response = [
+                'type' => 'error',
+                'code' => 500,
+                'message' =>  $th->getMessage()
+            ];
+            return response()->json($response, 500);
+        }        
     }
 }
 

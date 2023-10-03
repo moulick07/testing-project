@@ -25,7 +25,7 @@ class StoreProductRequest extends FormRequest
         
     
         return [
-            'name' => 'required',
+            'name' => 'required|unique:products,name',
             'short_description' => 'required|max:255',
             'long_description' => 'required',
             'in_stock' => 'required',
@@ -33,7 +33,7 @@ class StoreProductRequest extends FormRequest
             'discounted_price'=> 'required',
             'brand'=> 'required',
             'category'=> 'required',
-            'images' => 'required|mimes:png,jpg,jpeg,webp|max:2048',
+            'images.*' => 'required|mimes:png,jpg,jpeg,webp|max:2048',
             'cover_image' => 'required|mimes:png,jpg,jpeg,webp|max:2048',
             'value' => 'required',
             'parent_product'=>'required',

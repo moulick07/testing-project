@@ -5,6 +5,8 @@ namespace App\Http\Requests\product;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Validation\Rule;
+
 
 class updateProductRequest extends FormRequest
 {
@@ -24,7 +26,7 @@ class updateProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required',
+            'name' => ['required', Rule::unique('products')->ignore($this->product)],
             'short_description' => 'required|max:255',
             'long_description' => 'required',
             'in_stock' => 'required',
@@ -32,7 +34,7 @@ class updateProductRequest extends FormRequest
             'discounted_price'=> 'required',
             'brand'=> 'required',
             'category'=> 'required',
-            'images' => 'required|mimes:png,jpg,jpeg,webp|max:2048',
+            'images.*' => 'required|mimes:png,jpg,jpeg,webp|max:2048',
             'cover_image' => 'required|mimes:png,jpg,jpeg,webp|max:2048',
             'value' => 'required',
             'parent_product'=>'required',

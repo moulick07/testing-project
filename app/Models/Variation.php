@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
-class VariationTable extends Model
+class Variation extends Model
 {
     use HasFactory,softDeletes,HasUuids;
     protected $fillable = [
