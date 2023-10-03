@@ -16,4 +16,9 @@ class Category extends Model
         'parent_category',
         'is_parent',
     ];
+    public function setCategorySlugAttribute($title){
+        $slug = \Str::slug($title);// Query to check if slug already exists
+        $qry =Product::whereSlug($slug);
+        return $slug; 
+    }
 }

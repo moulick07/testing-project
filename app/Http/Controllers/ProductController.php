@@ -124,7 +124,7 @@ class ProductController extends Controller
 
         $input['images'] = implode(',',$files);
         $input['cover_image'] = $coverImageName;
-        $input['slug'] = Product::generateSlug($input['name']);
+        $input['slug'] = Product::setProductSlugAttribute($input['name']);
 
         $product->update($input);
         return [

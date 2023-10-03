@@ -49,7 +49,7 @@ class updateProductRequest extends FormRequest
      
        
         return [
-            "name.required" => "Please Write a title",
+            "name.required" => "Please Write a unique title",
             "short_description.required" => "Please write some short description",
             "long_description.requried" => "Please write some long description",
             "in_stock.requried" => "Please write number of stock ",
