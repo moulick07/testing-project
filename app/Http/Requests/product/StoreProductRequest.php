@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\product;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -39,6 +39,7 @@ class StoreProductRequest extends FormRequest
             'parent_product'=>'required',
             'main_category'=>'required',
             'variant'=>'required',
+            'is_active'=>'boolean',
         ];
     }
 
@@ -61,12 +62,19 @@ class StoreProductRequest extends FormRequest
         ];
     }
 
-    public function failedValidation(Validator $validator)
-{
-   throw new HttpResponseException(response()->json([
-     'success'   => false,
-     'message'   => 'Validation errors',
-     'data'      => $validator->errors()
-   ]));
-}
+    protected function failedValidation(Validator $validator)
+    {
+        $response = [
+            'type' => 'error',
+            'code' => 422,
+            'message' => "Server Validation Fail",
+            'errors' =>$validator->errors()
+        ];
+
+        /**
+         * Return response data in json formate
+         */
+        throw new HttpResponseException(response()->json($response, 422));
+    }
+
 }

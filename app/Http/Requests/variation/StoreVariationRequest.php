@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\variation;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Contracts\Validation\Validator;
 
 class StoreVariationRequest extends FormRequest
 {
@@ -43,4 +45,20 @@ class StoreVariationRequest extends FormRequest
             "value.requried" => "Please enter some values  ",
         ];
     }
+
+    protected function failedValidation(Validator $validator)
+    {
+        $response = [
+            'type' => 'error',
+            'code' => 422,
+            'message' => "Server Validation Fail",
+            'errors' =>$validator->errors()
+        ];
+
+        /**
+         * Return response data in json formate
+         */
+        throw new HttpResponseException(response()->json($response, 422));
+    }
+
 }

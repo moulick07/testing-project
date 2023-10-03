@@ -12,20 +12,23 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('products', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id');
             $table->string('name');
             $table->integer('price');
-            $table->string('slug');
-            $table->string('short-description');
-            $table->string('keypoints');
-            $table->float('discounted-price');
-            $table->integer('in-stock');
+            $table->string('slug')->nullable();
+            $table->string('short_description');
+            $table->string('keypoints')->nullable();
+            $table->float('discounted_price');
+            $table->integer('in_stock');
             $table->boolean('is_active');
             $table->softDeletes();
             $table->string('brand');
-            $table->string('cover-image');
-            $table->integer('main-category');
+            $table->string('cover_image');
+            $table->integer('main_category');
             $table->integer('parent_product');
+            $table->string('variant');
+            $table->integer('value');
+            $table->string('long_description');
             $table->string('images');
             $table->timestamps();
         });
@@ -36,6 +39,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('personal_access_tokens');
+        Schema::dropIfExists('products');
     }
 };

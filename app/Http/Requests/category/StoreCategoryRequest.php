@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\category;
 
 use Illuminate\Foundation\Http\FormRequest;
-
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Contracts\Validation\Validator;
 
 class StoreCategoryRequest extends FormRequest
 {
@@ -24,7 +25,7 @@ class StoreCategoryRequest extends FormRequest
     {
         return [
            
-                'title' => 'required',
+                'title' => 'required|max:50|unique:category,title',
                 'description' => 'required|max:255',
                 'is_parent' => 'required',
                 'parent_category' => 'required',
@@ -41,4 +42,20 @@ class StoreCategoryRequest extends FormRequest
             "parent_category.requried" => "Please select parent category",
         ];
     }
+
+    protected function failedValidation(Validator $validator)
+    {
+        $response = [
+            'type' => 'error',
+            'code' => 422,
+            'message' => "Server Validation Fail",
+            'errors' =>$validator->errors()
+        ];
+
+        /**
+         * Return response data in json formate
+         */
+        throw new HttpResponseException(response()->json($response, 422));
+    }
+
 }
