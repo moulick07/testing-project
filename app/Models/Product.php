@@ -29,14 +29,4 @@ class Product extends Model
         
     ];
 
-    public static function setProductSlugAttribute($title)
-  {
-    
-    $slug = \Str::slug($title);// Query to check if slug already exists
-    $qry =Product::whereSlug($slug);
-    
-    
-    return $slug; // Return the generated slug
-
-  }
 }

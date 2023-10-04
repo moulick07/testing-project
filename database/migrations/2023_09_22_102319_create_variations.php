@@ -14,14 +14,14 @@ return new class extends Migration
         Schema::create('variations', function (Blueprint $table) {
             $table->uuid('id');
             $table->string('title');
+            $table->string('category_id');
             $table->string('type');
             $table->string('value')->nullable();
             $table->string('prefix')->nullable();
             $table->string('postfix')->nullable();
             $table->string('countable')->nullable();
-            $table->softDeletes();
-            $table->string('category_id');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('variation_tables');
+        Schema::dropIfExists('variations');
     }
 };

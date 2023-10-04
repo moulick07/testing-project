@@ -21,7 +21,6 @@ return new class extends Migration
             $table->float('discounted_price');
             $table->integer('in_stock');
             $table->boolean('is_active');
-            $table->softDeletes();
             $table->string('brand');
             $table->string('cover_image');
             $table->integer('main_category');
@@ -31,6 +30,7 @@ return new class extends Migration
             $table->string('long_description');
             $table->string('images');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

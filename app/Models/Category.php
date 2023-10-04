@@ -17,9 +17,5 @@ class Category extends Model
         'is_parent',
         'slug',
     ];
-    public static function setCategorySlugAttribute($title){
-        $slug = \Str::slug($title);// Query to check if slug already exists
-        $qry =Category::whereSlug($slug);
-        return $slug; 
-    }
+    
 }

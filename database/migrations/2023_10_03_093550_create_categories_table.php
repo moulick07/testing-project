@@ -19,8 +19,8 @@ return new class extends Migration
             $table->boolean('is_parent');
             $table->integer('parent_category');
             $table->string('variation_group')->nullable();
-            $table->softDeletes();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

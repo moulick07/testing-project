@@ -30,9 +30,9 @@ class CategoryController extends Controller
     public function store(StoreCategoryRequest $request)
     {
         try {
-            $request['slug'] = Category::setCategorySlugAttribute($request->title);
-            
-        $category =  Category::create($request->all());
+         
+            $request['slug'] =  \Str::slug($request['title']);
+            $category =  Category::create($request->all());
         
         $response = [
             'type' => 'success',
@@ -81,9 +81,7 @@ class CategoryController extends Controller
     public function update(updateCategoryRequest $request, Category $category)
     {
         try {
-            if($request->title != $category->title){
-                $category->slug = Category::setCategorySlugAttribute($request->title);
-            }
+            $request['slug'] =  \Str::slug($request['title']);
             $category->update($request->all());
             $response = [
                 'type' => 'success',
