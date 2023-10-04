@@ -144,7 +144,9 @@ class ProductController extends Controller
                 // }
         }
 
-        $input['slug'] = Product::setProductSlugAttribute($input['name']);
+        if($input['name'] != $product->name){
+            $input['slug'] = Product::setProductSlugAttribute($request->name);
+        }
 
         $product->update($input);
         return [

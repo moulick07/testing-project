@@ -81,6 +81,9 @@ class CategoryController extends Controller
     public function update(updateCategoryRequest $request, Category $category)
     {
         try {
+            if($request->title != $category->title){
+                $category->slug = Category::setCategorySlugAttribute($request->title);
+            }
             $category->update($request->all());
             $response = [
                 'type' => 'success',
