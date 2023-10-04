@@ -34,6 +34,7 @@ class updateProductRequest extends FormRequest
             'discounted_price'=> 'required',
             'brand'=> 'required',
             'category'=> 'required',
+            'images'=>'required|array',
             'images.*' => 'required|mimes:png,jpg,jpeg,webp|max:2048',
             'cover_image' => 'required|mimes:png,jpg,jpeg,webp|max:2048',
             'value' => 'required',

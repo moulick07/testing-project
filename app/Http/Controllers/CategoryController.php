@@ -17,7 +17,7 @@ class CategoryController extends Controller
         $response = [
             'type' => 'success',
             'code' => 200,
-            'message' => "List",
+            'message' => "List of Category",
             'data' => $category
         ];
 
@@ -62,7 +62,7 @@ class CategoryController extends Controller
         $response = [
             'type' => 'success',
             'code' => 200,
-            'message' => "Detail",
+            'message' => "Detail Category",
             'data' => $category
         ];
 
@@ -82,7 +82,7 @@ class CategoryController extends Controller
             $response = [
                 'type' => 'success',
                 'code' => 200,
-                'message' => "Updated Successfully",
+                'message' => "Category Updated Successfully",
                 'data' => $category
             ];
     

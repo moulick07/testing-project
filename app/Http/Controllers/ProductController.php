@@ -20,7 +20,7 @@ class ProductController extends Controller
         $response = [
             'type' => 'success',
             'code' => 200,
-            'message' => "List",
+            'message' => "List of Products",
             'data' => $Product
         ];
 
@@ -39,9 +39,9 @@ class ProductController extends Controller
             
             $ProductCoverimage = $input['cover_image'];
             $Productitleimage = $input['images'];
-          
+            
             $files = [];
-            foreach($Productitleimage as $key=>$file)
+            foreach($Productitleimage as $file)
             {
                 $titleimage = mt_rand(3,9).time() . '.' . $file->extension();
                
@@ -55,7 +55,7 @@ class ProductController extends Controller
             $input['images'] = implode(",",$files);
             $input['cover_image'] = $coverImageName;
             
-            $input['slug'] = Product::generateSlug($input['name']);
+            $input['slug'] = Product::setProductSlugAttribute($input['name']);
             $product = Product::create($input);
             $response = [
                 'type' => 'success',
@@ -85,7 +85,7 @@ class ProductController extends Controller
         $response = [
             'type' => 'success',
             'code' => 200,
-            'message' => "Detail",
+            'message' => "Detail Product",
             'data' => $product
         ];
 
@@ -103,12 +103,12 @@ class ProductController extends Controller
 
       
         $input = $request->all();
-        // dd($input);
         $ProductCoverimage = $input['cover_image'];
         $Productitleimage = $input['images'];
       
 
-        // $input['images'] = implode(",",$files);
+
+        //updating the multiple image
         $files = [];
         foreach($Productitleimage as $key=>$file)
         {
@@ -124,6 +124,24 @@ class ProductController extends Controller
 
         $input['images'] = implode(',',$files);
         $input['cover_image'] = $coverImageName;
+
+
+        //deleting the image which is exists with multiple
+        $image = explode(",",$product->images);
+        $length = count($image);
+        for ($i = 0; $i < $length; $i++) {
+        if(file_exists(public_path('images/ProductImage/'.$image[$i])) ){
+                unlink(public_path("images/ProductImage/".$image[$i]));
+            }
+
+        }
+
+        if(file_exists(public_path('images/CoverImage/'.$product->cover_image)) ){
+           
+            unlink(public_path('images/CoverImage/'.$product->cover_image));
+            
+            }
+
         $input['slug'] = Product::setProductSlugAttribute($input['name']);
 
         $product->update($input);
@@ -152,12 +170,15 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         try {
-            if(file_exists(public_path('images/CoverImage/'.$product->cover_image)) ){
-                $image = explode(",",$product->images);
-                $length = count($image);
-                for ($i = 0; $i < $length; $i++) {
+            $image = explode(",",$product->images);
+            $length = count($image);
+            for ($i = 0; $i < $length; $i++) {
+            if(file_exists(public_path('images/ProductImage/'.$image[$i])) ){
                     unlink(public_path("images/ProductImage/".$image[$i]));
                 }
+    
+            }
+            if(file_exists(public_path('images/CoverImage/'.$product->cover_image)) ){
                 unlink(public_path('images/CoverImage/'.$product->cover_image));
                 
                 }

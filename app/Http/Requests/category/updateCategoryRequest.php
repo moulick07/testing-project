@@ -35,8 +35,8 @@ class updateCategoryRequest extends FormRequest
     public function messages()
     {
         return [
-            "title.required" => "Please Write a title",
-            "description.required" => "Please write some description",
+            "title.required" => "Please Write unique a title",
+            "description.required" => "Please write some Description ",
             "is_parent.requried" => "Please select whether category is parent or not",
             "parent_category.requried" => "Please select parent category",
         ];
