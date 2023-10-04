@@ -37,6 +37,7 @@ class StoreCategoryRequest extends FormRequest
     {
         return [
             "title.required" => "Please Write a title",
+            "title.max" => "Please make sure that the title should not be more than 50 characters",
             "description.required" => "Please write some description",
             "is_parent.requried" => "Please select whether category is parent or not",
             "parent_category.requried" => "Please select parent category",

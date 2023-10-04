@@ -30,7 +30,10 @@ class CategoryController extends Controller
     public function store(StoreCategoryRequest $request)
     {
         try {
+            $request['slug'] = Category::setCategorySlugAttribute($request->title);
+            
         $category =  Category::create($request->all());
+        
         $response = [
             'type' => 'success',
             'code' => 200,

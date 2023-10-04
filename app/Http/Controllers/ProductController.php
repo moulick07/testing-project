@@ -4,9 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\product\StoreProductRequest;
 use App\Http\Requests\product\updateProductRequest;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use App\Models\Category;
 use App\Models\Product;
 
 class ProductController extends Controller
@@ -125,22 +122,27 @@ class ProductController extends Controller
         $input['images'] = implode(',',$files);
         $input['cover_image'] = $coverImageName;
 
-
+        
         //deleting the image which is exists with multiple
         $image = explode(",",$product->images);
         $length = count($image);
         for ($i = 0; $i < $length; $i++) {
-        if(file_exists(public_path('images/ProductImage/'.$image[$i])) ){
-                unlink(public_path("images/ProductImage/".$image[$i]));
-            }
+            // if($input["images"] != $image[$i]){
+
+                if(file_exists(public_path('images/ProductImage/'.$image[$i])) ){
+                        unlink(public_path("images/ProductImage/".$image[$i]));
+                    }
+            // }
 
         }
+        // if($input['cover_image'] != $product->cover_image){
 
-        if(file_exists(public_path('images/CoverImage/'.$product->cover_image)) ){
-           
-            unlink(public_path('images/CoverImage/'.$product->cover_image));
-            
-            }
+            if(file_exists(public_path('images/CoverImage/'.$product->cover_image)) ){
+               
+                unlink(public_path('images/CoverImage/'.$product->cover_image));
+                
+                // }
+        }
 
         $input['slug'] = Product::setProductSlugAttribute($input['name']);
 

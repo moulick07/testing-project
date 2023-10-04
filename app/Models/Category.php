@@ -15,10 +15,11 @@ class Category extends Model
         'description',
         'parent_category',
         'is_parent',
+        'slug',
     ];
-    public function setCategorySlugAttribute($title){
+    public static function setCategorySlugAttribute($title){
         $slug = \Str::slug($title);// Query to check if slug already exists
-        $qry =Product::whereSlug($slug);
+        $qry =Category::whereSlug($slug);
         return $slug; 
     }
 }
