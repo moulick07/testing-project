@@ -99,9 +99,22 @@ class ProductController extends Controller
 
       
         $input = $request->all();
-        $ProductCoverimage = $input['cover_image'];
+
+        if($request->hasFile('cover_image')){
+
+            //delete the existing image
+            unlink(public_path('images/CoverImage/'.$product->cover_image));
+
+            // adding the new image
+            $ProductCoverimage = $input['cover_image'];
+            $coverImageName = mt_rand(3,9).time() . '.' . $ProductCoverimage->extension();
+            $ProductCoverimage->move(public_path('images/CoverImage'), $coverImageName);
+            $input['cover_image'] = $coverImageName;
+        }
+
+        if($request->hasFile('images') ){
+
         $Productitleimage = $input['images'];
-      
 
 
         //updating the multiple image
@@ -113,34 +126,18 @@ class ProductController extends Controller
             $files[] = $titleimage;  
             $file->move(public_path('images/ProductImage'), end($files));
         } 
-        $coverImageName = mt_rand(3,9).time() . '.' . $ProductCoverimage->extension();
-
-        $ProductCoverimage->move(public_path('images/CoverImage'), $coverImageName);
-       
-
         $input['images'] = implode(',',$files);
-        $input['cover_image'] = $coverImageName;
         
         //deleting the image which is exists with multiple
         $image = explode(",",$product->images);
         $length = count($image);
         for ($i = 0; $i < $length; $i++) {
-            // if($input["images"] != $image[$i]){
-
-                // if($input['cover_image']){
-                //         unlink(public_path("images/ProductImage/".$image[$i]));
-                //     }
-            // }
-
+    
+          unlink(public_path("images/ProductImage/".$image[$i]));
         }
-        // if($input['cover_image'] != $product->cover_image){
-
-           
-               
-                // unlink(public_path('images/CoverImage/'.$product->cover_image));
-                
-                // }
-      
+       
+            
+        }
                 
         
 
