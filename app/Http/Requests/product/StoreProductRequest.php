@@ -25,7 +25,7 @@ class StoreProductRequest extends FormRequest
         
     
         return [
-            'name' => 'required|unique:products,name',
+            'name' => 'required',
             'short_description' => 'required|max:255',
             'long_description' => 'required',
             'in_stock' => 'required',

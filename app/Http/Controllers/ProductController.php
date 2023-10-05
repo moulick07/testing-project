@@ -120,7 +120,6 @@ class ProductController extends Controller
 
         $input['images'] = implode(',',$files);
         $input['cover_image'] = $coverImageName;
-        $input['slug'] =  \Str::slug($input['name']);
         
         //deleting the image which is exists with multiple
         $image = explode(",",$product->images);
@@ -128,9 +127,9 @@ class ProductController extends Controller
         for ($i = 0; $i < $length; $i++) {
             // if($input["images"] != $image[$i]){
 
-                if($input['cover_image'] ){
-                        unlink(public_path("images/ProductImage/".$image[$i]));
-                    }
+                // if($input['cover_image']){
+                //         unlink(public_path("images/ProductImage/".$image[$i]));
+                //     }
             // }
 
         }
@@ -138,14 +137,12 @@ class ProductController extends Controller
 
            
                
-                unlink(public_path('images/CoverImage/'.$product->cover_image));
+                // unlink(public_path('images/CoverImage/'.$product->cover_image));
                 
                 // }
       
                 
-        if($input['name'] != $product->name){
-            $input['slug'] = Product::setProductSlugAttribute($request->name);
-        }
+        
 
         $product->update($input);
         return [
