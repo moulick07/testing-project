@@ -10,7 +10,6 @@
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.2",
         "laravel/tinker": "^2.8",
-        "prod/category": "^1.2",
         "yajra/laravel-datatables-oracle": "^10.8"
     },
     "require-dev": {

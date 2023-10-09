@@ -30,16 +30,14 @@ class CategoryTest extends TestCase
             'description' => 'Every gift from a friend is a wish for your happiness.',
             'parent_category' => 0,
             'is_parent' => 1,
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
         ];
 
         $response = $this->postJson($api, $Category);
         $response
             ->assertJson([
                 'type' => "success",
-                // 'code' => 200,
-                // 'message' => 'Successfully Category added'
+                'code' => 200,
+                'message' => 'Category store successfully'
             ]);
     }
 
@@ -51,12 +49,12 @@ class CategoryTest extends TestCase
 
 
         $response = $this->getJson($api);
-        // dd($response);
+        
         $response
             ->assertJson([
                 'type' => "success",
-                // 'code' => 200,
-                // 'message' => 'Successfully Category added'
+                'code' => 200,
+                'message' => 'List of Category'
             ]);
     }
     
@@ -72,8 +70,6 @@ class CategoryTest extends TestCase
             'description' => 'update testing category .',
             'parent_category' => 0,
             'is_parent' => 1,
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
         ];
 
         $response = $this->put($api,$Category);
@@ -81,8 +77,8 @@ class CategoryTest extends TestCase
         $response
             ->assertJson([
                 'type' => "success",
-                // 'code' => 200,
-                // 'message' => 'Successfully Category added'
+                'code' => 200,
+                'message' => 'Category Updated Successfully'
             ]);
     }
 
@@ -100,8 +96,8 @@ class CategoryTest extends TestCase
         $response
             ->assertJson([
                 'type' => "success",
-                // 'code' => 200,
-                // 'message' => 'Successfully Category added'
+                'code' => 200,
+                'message' => 'Category deleted successfully'
             ]);
     }
 
@@ -116,8 +112,7 @@ class CategoryTest extends TestCase
             'description' => '',
             'parent_category' => '',
             'is_parent' => '',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
+           
         ];
 
         $response = $this->postJson($api, $Category);
@@ -154,12 +149,10 @@ class CategoryTest extends TestCase
             'description' => 'Electronics is the study and use of electrical devices that operate at relatively low voltages by controlling the flow of electrons or other electrically charged particles in devices such as thermionic valves and semiconductors. The pure study of such devices is considered as a branch of physics.',
             'parent_category' => '0',
             'is_parent' => '1',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
+            
         ];
 
         $response = $this->postJson($api, $Category);
-        // dd($response);
         $response
             ->assertJson([
                 'type' => "error",
