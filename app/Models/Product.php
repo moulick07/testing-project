@@ -18,10 +18,10 @@ class Product extends Model
         'in_stock',
         'is_active',
         'brand',
-        'cover_image',
+    
         'main_category',
         'parent_product',
-        'images',
+        
         'value',
         'variant',
         'long_description',
