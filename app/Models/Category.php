@@ -16,6 +16,19 @@ class Category extends Model
         'parent_category',
         'is_parent',
         'slug',
+        
     ];
+    public static function boot()
+    {
+        parent::boot();
+        self::created(function($Category){
+            $Category->slug = \Str::slug($Category->name).'/'.$Category->id;
+        });
+        self::updated(function($Category){
+            $Category->slug = \Str::slug($Category->name).'/'.$Category->id; 
+        });
+
+       
+    }
     
 }

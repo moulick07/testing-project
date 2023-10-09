@@ -51,7 +51,6 @@ class ProductController extends Controller
 
             $input['images'] = implode(",",$files);
             $input['cover_image'] = $coverImageName;
-            $input['slug'] =  \Str::slug($input['name']);
             $product = Product::create($input);
             $response = [
                 'type' => 'success',

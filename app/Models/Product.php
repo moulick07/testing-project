@@ -29,4 +29,17 @@ class Product extends Model
         
     ];
 
+    public static function boot()
+    {
+        parent::boot();
+        self::created(function($product){
+            $product->slug = \Str::slug($product->name).'/'.$product->id;
+        });
+        self::updated(function($product){
+            $product->slug = \Str::slug($product->name).'/'.$product->id; 
+        });
+
+       
+    }
+
 }
