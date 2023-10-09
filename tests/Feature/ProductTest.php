@@ -15,7 +15,7 @@ class ProductTest extends TestCase
     /**
      * A basic feature test example.
      */
-    public function test_for_product_creating()
+    // public function test_for_product_creating()
     // {
     //     // $faker = Faker::create();
     //     // $fakermultiple = Faker::create(2);
@@ -57,3 +57,4 @@ class ProductTest extends TestCase
     //         ]);
     // }
 }
+
