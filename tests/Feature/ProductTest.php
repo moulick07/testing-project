@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -19,13 +20,8 @@ class ProductTest extends TestCase
     //     Storage::fake('avatars'); // Set the disk you want to use for testing
 
     //     $file = UploadedFile::fake()->image('avatar.jpg');// Create a fake image file
-      
-    //     $response = $this->post('/your-route', [
-           
-    //     ]);
-
     //     // Assert your response or perform other tests
-    //     $response->assertStatus(200);
+      
     //     $api = 'api/product';
         
     //     $filename = 'logo.jpg';
@@ -45,15 +41,11 @@ class ProductTest extends TestCase
     //         'parent_product'=>2,
     //         'price'=>20,
     //         'long_description'=>'shoes which are light weight with amazing',
-    //         'created_at' => Carbon::now(),
-    //         'updated_at' => Carbon::now(),
     //     ];
         
     //     Storage::disk('avatars')->assertExists($file->hashName());
-    //     //$user = User::create($userData);
-        
+   
     //     $response = $this->post($api, $Product);
-    //     // dd($api);  
     //     $response
     //     ->assertJson([
     //             'type' => "success",
@@ -61,5 +53,7 @@ class ProductTest extends TestCase
     //         ]);
             
     // }
+
+   
 }
 

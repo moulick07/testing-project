@@ -15,7 +15,7 @@ class VariationController extends Controller
         $response = [
             'type' => 'success',
             'code' => 200,
-            'message' => "List",
+            'message' => "List of Variation",
             'data' => $variation
         ];
 
