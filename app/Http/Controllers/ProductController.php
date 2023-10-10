@@ -34,23 +34,23 @@ class ProductController extends Controller
 
             $input = $request->all();
             
-            // $ProductCoverimage = $input['cover_image'];
-            // $Productitleimage = $input['images'];
+            $ProductCoverimage = $input['cover_image'];
+            $Productitleimage = $input['images'];
             
-            // $files = [];
-            // foreach($Productitleimage as $file)
-            // {
-            //     $titleimage = mt_rand(3,9).time() . '.' . $file->extension();
+            $files = [];
+            foreach($Productitleimage as $file)
+            {
+                $titleimage = mt_rand(3,9).time() . '.' . $file->extension();
                
-            //     $files[] = $titleimage;  
-            //     $file->move(public_path('images/ProductImage'), end($files));
-            // } 
-            // $coverImageName = mt_rand(3,9).time() . '.' . $ProductCoverimage->extension();
-            // $ProductCoverimage->move(public_path('images/CoverImage'), $coverImageName);
+                $files[] = $titleimage;  
+                $file->move(public_path('images/ProductImage'), end($files));
+            } 
+            $coverImageName = mt_rand(3,9).time() . '.' . $ProductCoverimage->extension();
+            $ProductCoverimage->move(public_path('images/CoverImage'), $coverImageName);
            
 
-            // $input['images'] = implode(",",$files);
-            // $input['cover_image'] = $coverImageName;
+            $input['images'] = implode(",",$files);
+            $input['cover_image'] = $coverImageName;
             $product = Product::create($input);
             $response = [
                 'type' => 'success',
@@ -166,18 +166,18 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         try {
-            // $image = explode(",",$product->images);
-            // $length = count($image);
-            // for ($i = 0; $i < $length; $i++) {
-            // if(file_exists(public_path('images/ProductImage/'.$image[$i])) ){
-            //         unlink(public_path("images/ProductImage/".$image[$i]));
-            //     }
+            $image = explode(",",$product->images);
+            $length = count($image);
+            for ($i = 0; $i < $length; $i++) {
+            if(file_exists(public_path('images/ProductImage/'.$image[$i])) ){
+                    unlink(public_path("images/ProductImage/".$image[$i]));
+                }
     
-            // }
-            // if(file_exists(public_path('images/CoverImage/'.$product->cover_image)) ){
-            //     unlink(public_path('images/CoverImage/'.$product->cover_image));
+            }
+            if(file_exists(public_path('images/CoverImage/'.$product->cover_image)) ){
+                unlink(public_path('images/CoverImage/'.$product->cover_image));
                 
-            //     }
+                }
             $product->delete();
                 $response =  [
                     "type" => "success",

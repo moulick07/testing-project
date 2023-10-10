@@ -4,100 +4,105 @@ namespace Tests\Feature;
 
 use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use factory;
 use Tests\TestCase;
 use Carbon\Carbon;
 
 
 class ProductTest extends TestCase
 {
+    use DatabaseTransactions;
     /**
      * A basic feature test example.
      */
     public function test_for_product_creating()
     {
-        // Storage::fake('avatars'); // Set the disk you want to use for testing
 
-        // $file = UploadedFile::fake()->image('avatar.jpg');// Create a fake image file
-        // Assert your response or perform other tests
-      
+        $this->withoutExceptionHandling();
+       
         $api = 'api/product';
         
-       
-        $Product =[
+
+        $Product = [
             'name' => 'Running shoes',
             'short_description' => 'running shoes',
-            'discounted_price'=>20,
-            'in_stock'=>20,
-            'is_active'=>1,
-            'brand'=>'Nike',
-           
-            'main_category'=>1,
-            'category'=>1,
-           
-            'value'=>30,
-            'variant'=>23,
-            'parent_product'=>2,
-            'price'=>20,
-            'long_description'=>'shoes which are light weight with amazing',
+            'discounted_price' => 20,
+            'in_stock' => 20,
+            'is_active' => 1,
+            'brand' => 'Nike',
+            'cover_image' =>  UploadedFile::fake()->create("test.jpg", 100),
+            'main_category' => 1,
+            'category' => 1,
+            'images' => [
+                0 => UploadedFile::fake()->create("test.jpg", 100),
+                1 => UploadedFile::fake()->create("test.png", 100),
+                2 => UploadedFile::fake()->create("test.png", 100),],
+            'value' => 30,
+            'variant' => 23,
+            'parent_product' => 2,
+            'price' => 20,
+            'long_description' => 'shoes which are light weight with amazing',
         ];
-        
+
         // Storage::disk('avatars')->assertExists($file->hashName());
-   
+
         $response = $this->post($api, $Product);
         $response
-        ->assertJson([
+            ->assertJson([
                 'type' => "success",
 
             ]);
-            
+
     }
-// fetching all the Products
-public function test_for_product_fetching_all()
-{
-    $this->test_for_product_creating();
-    $api = 'api/product';
-
-
-    $response = $this->getJson($api);
-    
-    $response
-        ->assertJson([
-            'type' => "success",
-            'code' => 200,
-            'message' => 'List of Products'
-        ]);
-}
-
-//updating product
-   public function test_for_product_updating()
+    // fetching all the Products
+    public function test_for_product_fetching_all()
     {
-       $this->test_for_product_creating();
-        $product = Product::where('deleted_at',null)->latest()->first();
-        // $file = UploadedFile::fake()->image('avatar.jpg');// Create a fake image file
-        // Assert your response or perform other tests
-        $api = 'api/product/'.$product->id;
-        $Product =[
+        $this->test_for_product_creating();
+        $api = 'api/product';
+
+
+        $response = $this->getJson($api);
+
+        $response
+            ->assertJson([
+                'type' => "success",
+                'code' => 200,
+                'message' => 'List of Products'
+            ]);
+    }
+
+    // //updating product
+    public function test_for_product_updating()
+    {
+        $this->test_for_product_creating();
+        $product = Product::where('deleted_at', null)->latest()->first();
+        
+        $api = 'api/product/' . $product->id;
+        $Product = [
             'name' => 'Running',
             'short_description' => 'running shoes',
-            'discounted_price'=>20,
-            'in_stock'=>20,
-            'is_active'=>1,
-            'brand'=>'Nike',
-            // 'cover_image' => $file,
-            'main_category'=>1,
-            'category'=>1,
-            // 'images' => $file,
-            'value'=>30,
-            'variant'=>23,
-            'parent_product'=>2,
-            'price'=>20,
-            'long_description'=>'shoes which are light weight with amazing',
+            'discounted_price' => 20,
+            'in_stock' => 20,
+            'is_active' => 1,
+            'brand' => 'Nike',
+            'cover_image' =>  UploadedFile::fake()->create("test.jpg", 100),
+            'main_category' => 1,
+            'category' => 1,
+            'images' =>[
+                0 => UploadedFile::fake()->create("test.jpg", 100),
+                1 => UploadedFile::fake()->create("test.png", 100),],
+            'value' => 30,
+            'variant' => 23,
+            'parent_product' => 2,
+            'price' => 20,
+            'long_description' => 'shoes which are light weight with amazing',
         ];
 
-        $response = $this->put($api,$Product);
-        
+        $response = $this->put($api, $Product);
+
         $response
             ->assertJson([
                 'type' => "success",
@@ -106,17 +111,17 @@ public function test_for_product_fetching_all()
             ]);
     }
 
-    //deleting product
+    // //deleting product
     public function test_for_product_deleting()
     {
-       $this->test_for_product_creating();
-        $productid = Product::where('deleted_at',null)->latest()->first();
-        
-        $api = 'api/product/'.$productid->id;
-        
+        $this->test_for_product_creating();
+        $productid = Product::where('deleted_at', null)->latest()->first();
+
+        $api = 'api/product/' . $productid->id;
+
         $response = $this->deleteJson($api);
-       
-        
+
+
         $response
             ->assertJson([
                 'type' => "success",
@@ -125,27 +130,28 @@ public function test_for_product_fetching_all()
             ]);
     }
 
+    //required validation test case
     public function test_for_product_validation_required()
     {
 
         $api = 'api/product';
 
-        $Product =[
+        $Product = [
             'name' => '',
             'short_description' => '',
-            'discounted_price'=>'',
-            'in_stock'=>'',
-            'is_active'=>'',
-            'brand'=>'',
-           
-            'main_category'=>'',
-            'category'=>'',
-           
-            'value'=>'',
-            'variant'=>'',
-            'parent_product'=>'',
-            'price'=>'',
-            'long_description'=>'',
+            'discounted_price' => '',
+            'in_stock' => '',
+            'is_active' => '',
+            'brand' => '',
+
+            'main_category' => '',
+            'category' => '',
+
+            'value' => '',
+            'variant' => '',
+            'parent_product' => '',
+            'price' => '',
+            'long_description' => '',
         ];
 
         $response = $this->postJson($api, $Product);
@@ -155,47 +161,87 @@ public function test_for_product_fetching_all()
                 'code' => 422,
                 'message' => 'Server Validation Fail',
                 "errors" => [
-                    "name"=> [
+                    "name" => [
                         "Please Write a title"
                     ],
-                    "short_description"=> [
+                    "short_description" => [
                         "Please write some short description"
                     ],
-                    "long_description"=> [
+                    "long_description" => [
                         "The long description field is required."
                     ],
-                    "in_stock"=> [
+                    "in_stock" => [
                         "The in stock field is required."
                     ],
-                    "price"=> [
+                    "price" => [
                         "The price field is required."
                     ],
-                    "discounted_price"=> [
+                    "discounted_price" => [
                         "The discounted price field is required."
                     ],
-                    "brand"=> [
+                    "brand" => [
                         "The brand field is required."
                     ],
-                    "category"=> [
+                    "category" => [
                         "The category field is required."
                     ],
-                    "value"=> [
+                    "value" => [
                         "The value field is required."
                     ],
-                    "parent_product"=> [
+                    "parent_product" => [
                         "The parent product field is required."
                     ],
-                    "main_category"=> [
+                    "main_category" => [
                         "Please add 1 main Category"
                     ],
-                    "variant"=> [
+                    "variant" => [
                         "please atleast 1 variant"
                     ],
-                    "is_active"=> [
+                    "is_active" => [
                         "The is active field must be true or false."
                     ]
                 ]
             ]);
     }
-}
 
+    public function test_for_product_image_size_texting()
+    {
+        $this->test_for_product_creating();
+        $product = Product::where('deleted_at', null)->latest()->first();
+        
+        $api = 'api/product/' . $product->id;
+        $Product = [
+            'name' => 'Running',
+            'short_description' => 'running shoes',
+            'discounted_price' => 20,
+            'in_stock' => 20,
+            'is_active' => 1,
+            'brand' => 'Nike',
+            'cover_image' =>  UploadedFile::fake()->create("test.jpg", 3000),
+            'main_category' => 1,
+            'category' => 1,
+            'images' =>[
+                0 => UploadedFile::fake()->create("test.jpg", 3000),
+                1 => UploadedFile::fake()->create("test.png", 3000),],
+            'value' => 30,
+            'variant' => 23,
+            'parent_product' => 2,
+            'price' => 20,
+            'long_description' => 'shoes which are light weight with amazing',
+        ];
+
+        $response = $this->put($api, $Product);
+
+        $response
+            ->assertJson([
+                'type' => "error",
+                'code' => 422,
+                'message' => 'Server Validation Fail',
+                "errors" => ["cover_image" => [
+                    "The cover image field must not be greater than 2048 kilobytes."
+                ]]
+            ]);
+    }
+
+
+}
