@@ -43,10 +43,10 @@ class ProductController extends Controller
                 $titleimage = mt_rand(3,9).time() . '.' . $file->extension();
                
                 $files[] = $titleimage;  
-                $file->move(public_path('images/ProductImage'), end($files));
+                $file->move(public_path('images/product_image'), end($files));
             } 
             $coverImageName = mt_rand(3,9).time() . '.' . $ProductCoverimage->extension();
-            $ProductCoverimage->move(public_path('images/CoverImage'), $coverImageName);
+            $ProductCoverimage->move(public_path('images/cover_image'), $coverImageName);
            
 
             $input['images'] = implode(",",$files);
@@ -102,12 +102,12 @@ class ProductController extends Controller
         if($request->hasFile('cover_image')){
 
             //delete the existing image
-            unlink(public_path('images/CoverImage/'.$product->cover_image));
+            unlink(public_path('images/cover_image/'.$product->cover_image));
 
             // adding the new image
             $ProductCoverimage = $input['cover_image'];
             $coverImageName = mt_rand(3,9).time() . '.' . $ProductCoverimage->extension();
-            $ProductCoverimage->move(public_path('images/CoverImage'), $coverImageName);
+            $ProductCoverimage->move(public_path('images/cover_image'), $coverImageName);
             $input['cover_image'] = $coverImageName;
         }
 
@@ -123,7 +123,7 @@ class ProductController extends Controller
             $titleimage = mt_rand(3,9).time() . '.' . $file->extension();
            
             $files[] = $titleimage;  
-            $file->move(public_path('images/ProductImage'), end($files));
+            $file->move(public_path('images/product_image'), end($files));
         } 
         $input['images'] = implode(',',$files);
         
@@ -132,7 +132,7 @@ class ProductController extends Controller
         $length = count($image);
         for ($i = 0; $i < $length; $i++) {
     
-          unlink(public_path("images/ProductImage/".$image[$i]));
+          unlink(public_path("images/product_image/".$image[$i]));
         }
        
             
@@ -169,13 +169,13 @@ class ProductController extends Controller
             $image = explode(",",$product->images);
             $length = count($image);
             for ($i = 0; $i < $length; $i++) {
-            if(file_exists(public_path('images/ProductImage/'.$image[$i])) ){
-                    unlink(public_path("images/ProductImage/".$image[$i]));
+            if(file_exists(public_path('images/product_image/'.$image[$i])) ){
+                    unlink(public_path("images/product_image/".$image[$i]));
                 }
     
             }
-            if(file_exists(public_path('images/CoverImage/'.$product->cover_image)) ){
-                unlink(public_path('images/CoverImage/'.$product->cover_image));
+            if(file_exists(public_path('images/cover_image/'.$product->cover_image)) ){
+                unlink(public_path('images/cover_image/'.$product->cover_image));
                 
                 }
             $product->delete();

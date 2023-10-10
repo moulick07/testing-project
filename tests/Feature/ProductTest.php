@@ -18,16 +18,17 @@ class ProductTest extends TestCase
     /**
      * A basic feature test example.
      */
-    public function test_for_product_creating()
+
+    public function test_for_product_creating($imageDelete = "yes")
     {
 
         $this->withoutExceptionHandling();
        
         $api = 'api/product';
+        Storage::fake('photos');
         
-
-        $Product = [
-            'name' => 'Running shoes',
+        $product = [
+            'name' => 'Running shoeszs',
             'short_description' => 'running shoes',
             'discounted_price' => 20,
             'in_stock' => 20,
@@ -38,8 +39,8 @@ class ProductTest extends TestCase
             'category' => 1,
             'images' => [
                 0 => UploadedFile::fake()->create("test.jpg", 100),
-                1 => UploadedFile::fake()->create("test.png", 100),
-                2 => UploadedFile::fake()->create("test.png", 100),],
+                1 => UploadedFile::fake()->create("test.jpg", 100),
+                2 => UploadedFile::fake()->create("test.jpg", 100),],
             'value' => 30,
             'variant' => 23,
             'parent_product' => 2,
@@ -47,20 +48,22 @@ class ProductTest extends TestCase
             'long_description' => 'shoes which are light weight with amazing',
         ];
 
-        // Storage::disk('avatars')->assertExists($file->hashName());
+        $response = $this->post($api, $product);
+        if($imageDelete == "yes")
+        {
+            $this->removeImages(explode(',',$response['data']['images']),$response['data']['cover_image']);
+        }
 
-        $response = $this->post($api, $Product);
-        $response
-            ->assertJson([
-                'type' => "success",
-
-            ]);
-
+        $response->assertJson([
+            'type' => "success",
+            
+        ]);
+        // Storage::disk('photos');
     }
     // fetching all the Products
     public function test_for_product_fetching_all()
     {
-        $this->test_for_product_creating();
+        $this->test_for_product_creating("no");
         $api = 'api/product';
 
 
@@ -77,11 +80,11 @@ class ProductTest extends TestCase
     // //updating product
     public function test_for_product_updating()
     {
-        $this->test_for_product_creating();
+        $this->test_for_product_creating("no");
         $product = Product::where('deleted_at', null)->latest()->first();
         
         $api = 'api/product/' . $product->id;
-        $Product = [
+        $product = [
             'name' => 'Running',
             'short_description' => 'running shoes',
             'discounted_price' => 20,
@@ -101,8 +104,15 @@ class ProductTest extends TestCase
             'long_description' => 'shoes which are light weight with amazing',
         ];
 
-        $response = $this->put($api, $Product);
+        $response = $this->put($api, $product);
+            $this->removeImages(explode(',',$response['data']['images']),$response['data']['cover_image']);
+ 
+       
 
+        $response->assertJson([
+            'type' => "success",
+            
+        ]);
         $response
             ->assertJson([
                 'type' => "success",
@@ -114,13 +124,17 @@ class ProductTest extends TestCase
     // //deleting product
     public function test_for_product_deleting()
     {
-        $this->test_for_product_creating();
-        $productid = Product::where('deleted_at', null)->latest()->first();
+        $this->test_for_product_creating("no");
+        $product = Product::where('deleted_at', null)->latest()->first();
 
-        $api = 'api/product/' . $productid->id;
-
+        $api = 'api/product/' . $product->id;
+    
+        // $this->removeImages(explode(',',$productid->images),$productid->cover_image);
         $response = $this->deleteJson($api);
 
+
+
+      
 
         $response
             ->assertJson([
@@ -130,13 +144,13 @@ class ProductTest extends TestCase
             ]);
     }
 
-    //required validation test case
+    // //required validation test case
     public function test_for_product_validation_required()
     {
 
         $api = 'api/product';
 
-        $Product = [
+        $product = [
             'name' => '',
             'short_description' => '',
             'discounted_price' => '',
@@ -154,7 +168,7 @@ class ProductTest extends TestCase
             'long_description' => '',
         ];
 
-        $response = $this->postJson($api, $Product);
+        $response = $this->postJson($api, $product);
         $response
             ->assertJson([
                 'type' => "error",
@@ -204,13 +218,14 @@ class ProductTest extends TestCase
             ]);
     }
 
-    public function test_for_product_image_size_texting()
+    //check if image is greater than 2mb 
+    public function test_for_product_image_size_testing()
     {
-        $this->test_for_product_creating();
+        $this->test_for_product_creating("no");
         $product = Product::where('deleted_at', null)->latest()->first();
         
         $api = 'api/product/' . $product->id;
-        $Product = [
+        $product = [
             'name' => 'Running',
             'short_description' => 'running shoes',
             'discounted_price' => 20,
@@ -230,7 +245,7 @@ class ProductTest extends TestCase
             'long_description' => 'shoes which are light weight with amazing',
         ];
 
-        $response = $this->put($api, $Product);
+        $response = $this->put($api, $product);
 
         $response
             ->assertJson([
@@ -241,6 +256,22 @@ class ProductTest extends TestCase
                     "The cover image field must not be greater than 2048 kilobytes."
                 ]]
             ]);
+    }
+
+//remove image function
+    public function removeImages($productImage,$coverImage)
+    {
+        // remove product images
+        foreach($productImage as $image)
+        {
+            $imagePath = public_path().'/images/product_image/'.$image;
+            unlink($imagePath);
+        }
+
+        $coverImagePath = public_path().'/images/cover_image/'.$coverImage;
+      
+        unlink($coverImagePath);
+
     }
 
 
