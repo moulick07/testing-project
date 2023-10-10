@@ -204,7 +204,7 @@ class ProductTest extends TestCase
             ]);
     }
 
-    public function test_for_product_image_size_texting()
+    public function test_for_product_image_size_testing()
     {
         $this->test_for_product_creating();
         $product = Product::where('deleted_at', null)->latest()->first();
