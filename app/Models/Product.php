@@ -25,7 +25,7 @@ class Product extends Model
         'value',
         'variant',
         'long_description',
-        'slug',  
+          
     ];
 
     public static function boot()
