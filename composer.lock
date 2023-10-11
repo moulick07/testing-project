@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a77ad3f1aeb68ba67d612dee3c56cb67",
+    "content-hash": "7e941bd153c0f035bfefd7fc48a0aee6",
     "packages": [
         {
             "name": "brick/math",
@@ -5566,6 +5566,59 @@
                 }
             ],
             "time": "2022-03-08T17:03:00+00:00"
+        },
+        {
+            "name": "wcg104/product",
+            "version": "v1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/wcg104/product.git",
+                "reference": "5c4e6a91d7803a58214373f78e0ee7f6073a47b1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/wcg104/product/zipball/5c4e6a91d7803a58214373f78e0ee7f6073a47b1",
+                "reference": "5c4e6a91d7803a58214373f78e0ee7f6073a47b1",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/framework": "^10.0",
+                "php": "^8.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Wcg104\\Product\\Providers\\ProductServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Wcg104\\Product\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Moulick",
+                    "email": "moulick.r@webcodegenie.com"
+                }
+            ],
+            "description": "CRUD operation package for product and category in laravel",
+            "keywords": [
+                "crud",
+                "laravel",
+                "php"
+            ],
+            "support": {
+                "issues": "https://github.com/wcg104/product/issues",
+                "source": "https://github.com/wcg104/product/tree/v1"
+            },
+            "time": "2023-10-11T05:09:51+00:00"
         },
         {
             "name": "webmozart/assert",
