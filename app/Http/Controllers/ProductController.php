@@ -89,16 +89,19 @@ class ProductController extends Controller
 
                 $product_media = ProductMedia::create($input);
                 
-                $input['product_item_id'] = $product_item->id;
-                $item_name = $input['itemname'];
-                $item_quantity = $input['itemquantity'];
-                
-                //if the itemname is coming in array then multiple values will be stored
-                foreach($item_name as $key=>$value){    
-                    $input['itemname']= $value;
-                    $input['itemquantity']= $item_quantity[$key];
+                if($input['itemname'] && $input['itemquantity']){
+
+                    $input['product_item_id'] = $product_item->id;
+                    $item_name = $input['itemname'];
+                    $item_quantity = $input['itemquantity'];
                     
-                    $product_item_size = ProductItemSize::create($input);
+                    //if the itemname is coming in array then multiple values will be stored
+                    foreach($item_name as $key=>$value){    
+                        $input['itemname']= $value;
+                        $input['itemquantity']= $item_quantity[$key];
+                        
+                        $product_item_size = ProductItemSize::create($input);
+                    }
                 }
             }
 
@@ -233,7 +236,7 @@ class ProductController extends Controller
                     if (file_exists(public_path('images/product_media/' . $image[$i]))) {
                         unlink(public_path("images/product_media/" . $image[$i]));
                     }
-                # code...
+               
                 $value->delete();   
             }
 
