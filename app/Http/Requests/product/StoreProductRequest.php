@@ -24,24 +24,14 @@ class StoreProductRequest extends FormRequest
     {
         
     
-        return [
+        return array_merge(StoreProdutItemRequest::rules(), StoreProductItemSizeRequest::rules(),StoreProductMediaRequest::rules(), [
             'name' => 'required',
             'short_description' => 'required|max:255',
-            'long_description' => 'required',
-            'in_stock' => 'required',
-            'price'=> 'required',
-            'discounted_price'=> 'required',
             'brand'=> 'required',
-            'category'=> 'required',
-            'images' => 'required|array',
-            'images.*' => 'required|mimes:png,jpg,jpeg,webp|max:2048',
-            'cover_image' => 'required|mimes:png,jpg,jpeg,webp|max:2048',
-            'value' => 'required',
-            'parent_product'=>'required',
-            'main_category'=>'required',
-            'variant'=>'required',
+            'category_id'=> 'required',
+            'product_type'=>'required',
             'is_active'=>'boolean',
-        ];
+        ]);
     }
 
     public function messages()
@@ -50,16 +40,19 @@ class StoreProductRequest extends FormRequest
         return [
             "name.required" => "Please Write a title",
             "short_description.required" => "Please write some short description",
-            "long_description.requried" => "Please write some long description",
-            "in_stock.requried" => "Please write number of stock ",
-            "discounted_price.requried" => "Please write discounted price ",
             "brand.requried" => "Please write brand's name  ",
-            "category.requried" => "Please select 1 category",
+            "category_id.requried" => "Please select 1 category",
             "cover_image.requried" => "Please add one cover image ",
-            "value.requried" => "Please add value ",
-            "parent_product.requried" => "Please select parent product  ",
-            "main_category.required" => "Please add 1 main Category",
-            "variant.required"=>"please atleast 1 variant",
+            "product_type.requried" => "Please add Product Type ",
+            "is_active.requried" => "Please add either active or inactive for the product  ",
+            "color.required"=> "Please enter the color for the product item",
+            "price.required"=> "Please enter the price for the product item",
+            "final_price.required"=> "Please enter the final price  for the product item",
+            "is_available.required"=> "Please enter whether the product item is available or not",
+            "quantity.required" => "Plese enter the quantity for the product ",
+            "tags.required" => "Plese enter the tag for the product ",
+            "image.required" => "Plese select atleast 1 image for the product",
+           
         ];
     }
 

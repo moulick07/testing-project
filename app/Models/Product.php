@@ -12,20 +12,13 @@ class Product extends Model
     use HasFactory,softDeletes,HasUuids;
     protected $fillable = [
         'name',
-        'price',
+        'category_id',
         'short_description',
-        'discounted_price',
-        'in_stock',
-        'is_active',
         'brand',
-        'cover_image',
-        'main_category',
-        'parent_product',
-        'images',
-        'value',
-        'variant',
-        'long_description',
-          
+        'is_active',
+        'product_type',
+        'slug',
+      
     ];
 
     public static function boot()

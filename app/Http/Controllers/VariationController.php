@@ -11,11 +11,11 @@ class VariationController extends Controller
 {
     public function index()
     {
-        $variation = Variation::paginate(20);
+        $variation = Variation::paginate(10);
         $response = [
             'type' => 'success',
             'code' => 200,
-            'message' => "List of Variation",
+            'message' => "List",
             'data' => $variation
         ];
 
