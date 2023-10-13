@@ -30,7 +30,7 @@ class StoreProductRequest extends FormRequest
             'brand'=> 'required',
             'category_id'=> 'required',
             'product_type'=>'required',
-            'is_active'=>'boolean',
+           
         ]);
     }
 

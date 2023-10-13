@@ -10,6 +10,7 @@ use App\Models\ProductItem;
 use App\Models\ProductItemSize;
 use App\Models\ProductMedia;
 use Illuminate\Support\Facades\DB;
+
 class ProductController extends Controller
 {
     /**
@@ -41,23 +42,48 @@ class ProductController extends Controller
             $input = $request->all();
             $input['ordering'] = 1;
             $product = Product::create($input);
-           
+
             //if product created than add details to product item table 
             $input['product_id'] = $product->id;
-            $checking = ProductItem::where('product_id', $product->id)->latest()->first();
-            
-            if ($checking) {
 
-                $input['ordering'] = $checking->ordering + 1;
-            } else {
-                $input['ordering'] = 1;
+
+
+            if ($input['color'] && $input['price'] && $input['final_price'] && $input['is_available'] && $input['tags']) {
+
+
+                $item_color = $input['color'];
+                $item_price = $input['price'];
+                $item_final_price = $input['final_price'];
+                $item_is_available = $input['is_available'];
+                $item_tags = $input['tags'];
+
+                //if the itemname is coming in array then multiple values will be stored
+                foreach ($item_color as $key => $value) {
+                    $input['color'] = $value;
+                    $input['price'] = $item_price[$key];
+                    $input['final_price'] = $item_final_price[$key];
+                    // $input['final_price']= $item_final_price[$key];
+                    $input['is_available'] = $item_is_available[$key];
+                    $input['tags'] = $item_tags[$key];
+                    $checking = ProductItem::where('product_id', $product->id)->latest()->first();
+
+                    if ($checking) {
+
+                        $input['ordering'] = $checking->ordering + 1;
+                    } else {
+                        $input['ordering'] = 1;
+                    }
+                    $product_item = ProductItem::create($input);
+                }
             }
-            $product_item = ProductItem::create($input);
+
+            // $product_item = ProductItem::create($input);
 
 
             //if product item 
             if ($product_item) {
                 $image = $input['image'];
+                $files = [];
                 foreach ($image as $file) {
                     if ($file->extension() == 'jpeg' || $file->extension() == 'jpg' || $file->extension() == 'png') {
                         $input['type'] = "image";
@@ -65,41 +91,43 @@ class ProductController extends Controller
                         $input['type'] = "video";
                     }
 
-                    $files = [];
+
                     $titleimage = mt_rand(3, 9) . time() . '.' . $file->extension();
 
                     $files[] = $titleimage;
                     $file->move(public_path('images/product_media'), end($files));
+                    
+                }
+                foreach ($files as $key => $media) {
+                    
+                    $input['product_item_id'] = $product_item->id;
+                    $input['name'] =$media;
+                    $input['image'] = $media;
+                    $input['path'] = 'images/product_media';
+                    $checking = ProductMedia::where('product_item_id', $product_item->id)->latest()->first();
+                    if ($checking) {
+    
+                        $input['ordering'] = $checking->ordering + 1;
+                    } else {
+                        $input['ordering'] = 1;
+                    }
+                    $productmedia = ProductMedia::create($input);
+    
                 }
 
-                $input['product_item_id'] = $product_item->id;
-                $input['name'] = implode(",", $files);
-                $input['image'] = implode(",", $files);
-                $input['path'] = 'images/product_media';
-               
-                $checking = ProductMedia::where('product_item_id', $product_item->id)->latest()->first();
-              
-                if ($checking) {
 
-                    $input['ordering'] = $checking->ordering+1 ;
-                } 
-                else {
-                    $input['ordering'] = 1;
-                }
 
-                $product_media = ProductMedia::create($input);
-                
-                if($input['itemname'] && $input['itemquantity']){
+                if ($input['itemname'] && $input['itemquantity']) {
 
                     $input['product_item_id'] = $product_item->id;
                     $item_name = $input['itemname'];
                     $item_quantity = $input['itemquantity'];
-                    
+
                     //if the itemname is coming in array then multiple values will be stored
-                    foreach($item_name as $key=>$value){    
-                        $input['itemname']= $value;
-                        $input['itemquantity']= $item_quantity[$key];
-                        
+                    foreach ($item_name as $key => $value) {
+                        $input['itemname'] = $value;
+                        $input['itemquantity'] = $item_quantity[$key];
+
                         $product_item_size = ProductItemSize::create($input);
                     }
                 }
@@ -107,17 +135,17 @@ class ProductController extends Controller
 
 
             DB::commit();
-           
-                $response = [
-                    'type' => 'success',
-                    'code' => 200,
-                    'message' => "Product store successfully",
-                    'data' => $product,
-                    $product_item,
-                    $product_media,
-                    $product_item_size
-                ];
-                return response()->json($response, 200);
+
+            $response = [
+                'type' => 'success',
+                'code' => 200,
+                'message' => "Product store successfully",
+                'data' => $product,
+                $product_item,
+               
+                $product_item_size
+            ];
+            return response()->json($response, 200);
         } catch (\Throwable $th) {
             \Log::error("something went wrong");
             DB::rollBack();
@@ -149,7 +177,7 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(updateProductRequest $request, Product $product, ProductMedia $productMedia)
+    public function update(StoreProductRequest $request, Product $product)
     {
 
         try {
@@ -157,47 +185,64 @@ class ProductController extends Controller
 
             $input = $request->all();
 
+            $product->update($input);
+            $product_item_id = ProductItem::where('product_id', $product->id)->first();
+            $product_item_id->update($input);
+
             if ($request->hasFile('image')) {
 
+                $productMedia = ProductMedia::where('product_item_id', $product_item_id->id)->first();
                 //delete the existing image
-                unlink(public_path('images/product_item_image/' . $productMedia->name));
 
-                // adding the new image
-                $ProductCoverimage = $input['cover_image'];
-                $coverImageName = mt_rand(3, 9) . time() . '.' . $ProductCoverimage->extension();
-                $ProductCoverimage->move(public_path('images/CoverImage'), $coverImageName);
-                $input['cover_image'] = $coverImageName;
-            }
-
-            if ($request->hasFile('images')) {
-
-                $Productitleimage = $input['images'];
-
-
-                //updating the multiple image
+                $Productitleimage = $input['image'];
                 $files = [];
                 foreach ($Productitleimage as $key => $file) {
                     $titleimage = mt_rand(3, 9) . time() . '.' . $file->extension();
 
                     $files[] = $titleimage;
-                    $file->move(public_path('images/ProductImage'), end($files));
+                    $file->move(public_path('images/product_media'), end($files));
                 }
-                $input['images'] = implode(',', $files);
+                $input['image'] = implode(',', $files);
+                $input['product_item_id'] = $product_item_id->id;
+                $input['name'] = implode(",", $files);
+                $input['image'] = implode(",", $files);
+                $input['path'] = 'images/product_media';
 
+
+                $productMedia->update($input);
                 //deleting the image which is exists with multiple
-                $image = explode(",", $product->images);
+                $image = explode(",", $productMedia->image);
                 $length = count($image);
                 for ($i = 0; $i < $length; $i++) {
 
-                    unlink(public_path("images/ProductImage/" . $image[$i]));
+                    unlink(public_path("images/product_media/" . $image[$i]));
                 }
+            }
+            if ($input['itemname'] && $input['itemquantity']) {
+                $item_size = ProductItemSize::where('itemname', $input['itemname'])->first();
+                $input['product_item_id'] = $product_item_id->id;
+                $item_name = $input['itemname'];
+                $item_quantity = $input['itemquantity'];
 
+                //if the itemname is coming in array then multiple values will be stored
+                foreach ($item_name as $key => $value) {
+                    $input['itemname'] = $value;
+                    $input['itemquantity'] = $item_quantity[$key];
 
+                    $product_item_size = $item_size->update($input);
+                }
             }
 
 
 
-            $product->update($input);
+
+            //updating the multiple image
+
+
+
+
+
+
             return [
                 'type' => 'success',
                 'code' => 200,
@@ -225,23 +270,23 @@ class ProductController extends Controller
         try {
 
             // dd($product->id);
-            $product_item = ProductItem::where('product_id',$product->id)->get();
-            
-            $product_media = ProductMedia::where('product_item_id',$product_item[0]->id)->get();
+            $product_item = ProductItem::where('product_id', $product->id)->get();
+
+            $product_media = ProductMedia::where('product_item_id', $product_item[0]->id)->get();
             foreach ($product_media as $key => $value) {
                 $image = explode(",", $value->image);
-               
+
                 $length = count($image);
                 for ($i = 0; $i < $length; $i++) {
                     if (file_exists(public_path('images/product_media/' . $image[$i]))) {
                         unlink(public_path("images/product_media/" . $image[$i]));
                     }
-               
-                $value->delete();   
-            }
+
+                    $value->delete();
+                }
 
             }
-           
+
             $product->delete();
             $product_item->delete();
             $response = [

@@ -26,7 +26,7 @@ class StoreProdutItemRequest extends FormRequest
                 'color' => 'required',
                 'price' => 'required|max:255',
                 'final_price'=> 'required',
-                'is_available'=> 'boolean',
+               
                 'quantity'=>'required',
                
                 'tags'=>'required',
