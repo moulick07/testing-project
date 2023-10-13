@@ -19,7 +19,7 @@ class StoreProdutItemRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public static function rules(): array
+    public static function rules()
     {
         
             return [

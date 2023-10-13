@@ -22,7 +22,6 @@ class StoreProductRequest extends FormRequest
      */
     public function rules()
     {
-        
     
         return array_merge(StoreProdutItemRequest::rules(), StoreProductItemSizeRequest::rules(),StoreProductMediaRequest::rules(), [
             'name' => 'required',

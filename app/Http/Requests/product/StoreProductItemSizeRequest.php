@@ -22,10 +22,10 @@ class StoreProductItemSizeRequest extends FormRequest
     public static function rules(): array
     {
         return [
-            'itemname' => '',
-           'itemname.*' => '',
+           
+           'itemname*' => '',
            'itemquantity' => '',
-           'itemquantity.*' => '',
+           'itemquantity*' => '',
         ];
     }
 }

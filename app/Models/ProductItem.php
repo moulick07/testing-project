@@ -21,4 +21,20 @@ class ProductItem extends Model
         'tags',
         'ordering'
     ];
-}
+
+
+        /**
+         * Get all of the comments for the ProductItem
+         *
+         * @return \Illuminate\Database\Eloquent\Relations\HasMany
+         */
+        public function productMedia()
+        {
+            return $this->hasMany(ProductMedia::class, 'product_item_id');
+        }
+        public function productSize()
+        {
+            return $this->hasMany(ProductItemSize::class, 'product_item_id');
+        }
+
+    }
