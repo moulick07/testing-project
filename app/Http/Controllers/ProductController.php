@@ -11,6 +11,8 @@ use App\Models\ProductItemSize;
 use App\Models\ProductMedia;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\File;
+
 
 class ProductController extends Controller
 {
@@ -33,9 +35,37 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+
+    
+     public function test(Request $request){
+
+      $request = request()->all();
+        foreach ($request['image'] as $key=> $img) {
+            $base64Image = file_get_contents($img);
+            $fileName = mt_rand(3, 9) .time(). '.png'; // You can generate a unique filename with the appropriate extension.
+            $folderPath = public_path('images/product_media'); 
+            if (!file_exists($folderPath)) {
+                mkdir($folderPath, 0755, true); // Create the folder if it doesn't exist.
+            }
+            $imagePath = $folderPath . '/' . $fileName;
+
+            // Save the image to the folder in the public directory.
+           $data = file_put_contents($imagePath, $base64Image);
+          
+            // $product_media =  ProductMedia::create([
+            //     'name'=>$fileName,
+            //     "image"=>$fileName,
+            //     'path'=>'images/product_media',
+            //     'ordering'=>$key+1,
+            //     'product_item_id'=>$productitem->id,
+
+            // ]);
+        
+        }
+     }
     public function store(Request $request)
     {
-        // dd(request()->all());
+     
         try {
 
             DB::beginTransaction();
@@ -43,15 +73,12 @@ class ProductController extends Controller
             $input = request()->all();
             $input['ordering'] = 1;
             $product = Product::create($input);
-
-
-            //if product created than add details to product item table 
             $input['product_id'] = $product->id;
-            // dd($input['product_item']);
+          
             foreach ($input['product_item'] as $key => $product_item)
             {
                 
-
+                
                 $input['color'] = $product_item['color'];
                 $input['quantity'] = $product_item['quantity'];
                 $input['price'] = $product_item['price'];
@@ -59,40 +86,44 @@ class ProductController extends Controller
                 $input['is_available'] = $product_item['is_available'];
                 $input['tags'] = $product_item['tags'];
                 $productitem = ProductItem::create($input);
-                foreach ($product_item['image'] as $key=> $img) {
-                 
-                    $base64Image = file_get_contents($img);
-                    $fileName = mt_rand(3, 9) .time(). '.png'; // You can generate a unique filename with the appropriate extension.
-                    $folderPath = public_path('images/product_media'); 
-                    if (!file_exists($folderPath)) {
-                        mkdir($folderPath, 0755, true); // Create the folder if it doesn't exist.
-                    }
-                    $imagePath = $folderPath . '/' . $fileName;
-
-                    // Save the image to the folder in the public directory.
-                    file_put_contents($imagePath, $base64Image);
-                    $product_media =  ProductMedia::create([
-                        'name'=>$fileName,
-                        "image"=>$fileName,
-                        'path'=>$folderPath,
-                        'ordering'=>$key+1,
-                        'product_item_id'=>$productitem->id,
-
-                    ]);
                 
-                }
+                    // dd($product_item['image']);
+                    $this->moveImages($product_item['image'] ,$productitem);
+                    // if($img ==)
+                    // $base64Image = file_get_contents($img);
+                    // // $extension = explode('/',mime_content_type($img));
+
+                    // $fileName = mt_rand(3, 9) .time(); // You can generate a unique filename with the appropriate extension.
+                    
+                    // $folderPath = public_path('images/product_media'); 
+                    // if (!file_exists($folderPath)) {
+                    //     mkdir($folderPath, 0755, true); // Create the folder if it doesn't exist.
+                    // }
+                    // $imagePath = $folderPath . '/' . $fileName;
+                    
+                    // file_put_contents($imagePath, $base64Image);
+                    // $product_media =  ProductMedia::create([
+                    //     'name'=>$fileName,
+                    //     "image"=>$fileName,
+                    //     'path'=>'images/product_media',
+                    //     'ordering'=>$key+1,
+                    //     'product_item_id'=>$productitem->id,
+
+                    // ]);
+                
+                        
                 $testArray2=[];
-            //    dd($product_item['product_item_size']);
+           
                 foreach ($product_item['product_item_size'] as $item_key => $itemname) {
-                // dd($itemname['id']);
+               
                 $testArray2 =  [
                     'itemname' => $itemname['itemname'],
                     'itemquantity'=>$itemname['itemquantity'],
                     'product_item_id' =>$productitem->id
                 ];
-                // dd($testArray2);
+               
                 $productsize = ProductItemSize::create($testArray2);
-                //dd($productsize);
+              
                 }
             }
             DB::commit();
@@ -145,13 +176,11 @@ class ProductController extends Controller
         try {
 
             $input = request()->all();
-            // dd($product);
+            
             $product->update($input);
 
             $product_item_ids = ProductItem::where('product_id', $product->id)->get()->pluck('id')->toArray();
-            // $product->productItem()->productMedia()->delete();
-            //    $delete_item = ProductItemSize::whereIn('product_item_id',$product_item_ids)->delete();
-            // dd($product->id);
+            
             $testArray = [];
             foreach ($input['product_item'] as $key => $product_item) {
                 $testArray['product_id'] = $product->id;
@@ -162,147 +191,81 @@ class ProductController extends Controller
                 $testArray['is_available'] = $product_item['is_available'];
                 $testArray['tags'] = $product_item['tags'];
                 $testArray['ordering'] = $key;
-                // dd($product_item_ids);
-
+               
                 $productitem = ProductItem::updateOrCreate(['id'=>$product_item['id']],$testArray);
-                // dd($productitem);
-
-                // dd($productitem);
-                // foreach ($product_item['image'] as $key=> $img) {
-                //     # code...
-                //     $base64Image = file_get_contents($img);
-                //     $fileName = mt_rand(3, 9) .time(). '_' . uniqid() . '.png'; // You can generate a unique filename with the appropriate extension.
-                //     $folderPath = public_path('images/product_media'); 
-                //     if (!file_exists($folderPath)) {
-                //         mkdir($folderPath, 0755, true); // Create the folder if it doesn't exist.
-                //     }
-                //     $imagePath = $folderPath . '/' . $fileName;
-
-                //     // Save the image to the folder in the public directory.
-                //     file_put_contents($imagePath, $base64Image);
-                //     $product_media =  ProductMedia::create([
-                //         'name'=>$fileName,
-                        
-                //         'path'=>$folderPath,
-                //         'ordering'=>$key+1,
-                //         'product_item_id'=>$productitem->id,
-
-                //     ]);
-                
-                // }
-                $item_id = ProductItem::all();
-                // dd($item_id);
-
-                // dd($productitem->id);
+         
                 $testArray2 = [];
             foreach ($product_item['product_item_size'] as $item_key => $itemname) {
-                // dd($itemname['id']);
+                
                 $testArray2 = [
                     'itemname' => $itemname['itemname'],
                     'itemquantity'=>$itemname['itemquantity'],
                     'product_item_id' =>$productitem->id
                 ];
-                //dd($testArray2);
+               
                 ProductItemSize::updateOrCreate(['id'=>$itemname['id']],$testArray2);
             }
-            // dd($product_item['image']);
-            if($product_item['media']){
-                    // dd($product_item_ids[$key]);
-                //delete image first 
-                $product_media = ProductMedia::where('product_item_id',$product_item_ids[$key])->get();
-                foreach ($product_media as $productmedia) {
-                    // dd($productmedia->name);
-                    # code...
-                unlink(public_path('images/product_media/'.$productmedia->name)); 
-                }
 
-                foreach ($product_item['media'] as $key=> $img) {
-                    # code...
-                    // dd($img);
-                    $base64Image = file_get_contents($img['image']);
-                    // dd($base64Image);
-                    $fileName = mt_rand(3, 9) .time(). '.png'; // You can generate a unique filename with the appropriate extension.
-                    $folderPath = public_path('images/product_media'); 
-                    if (!file_exists($folderPath)) {
-                        mkdir($folderPath, 0755, true); // Create the folder if it doesn't exist.
-                    }
-                    $imagePath = $folderPath . '/' . $fileName;
-
-                    // Save the image to the folder in the public directory.
-                    file_put_contents($imagePath, $base64Image);
-                    $product_media =  ProductMedia::updateOrCreate([
-                        'name'=>$fileName,
-                        'image'=>$fileName,
-                        'path'=>$folderPath,
-                        'ordering'=>$key+1,
-                        'product_item_id'=>$productitem->id,
-
-                    ]);
-                
-                }
             
-            }
+            // if(!empty($product_item['media'])){
+                  
+            //     $product_media = ProductMedia::where('product_item_id',$product_item_ids[$key])->get();
+            //     foreach ($product_media as $productmedia) {
+                 
+            //     unlink(public_path('images/product_media/'.$productmedia->name)); 
+            //     }
 
+            //     foreach ($product_item['image'] as $key=> $img) {
+                   
+            //         $base64Image = file_get_contents($img['image']);
+                   
+            //         $fileName = mt_rand(3, 9) .time(). '.png'; // You can generate a unique filename with the appropriate extension.
+            //         $folderPath = public_path('images/product_media'); 
+            //         if (!file_exists($folderPath)) {
+            //             mkdir($folderPath, 0755, true); // Create the folder if it doesn't exist.
+            //         }
+            //         $imagePath = $folderPath . '/' . $fileName;
+
+                    
+            //         file_put_contents($imagePath, $base64Image);
+            //         $product_media =  ProductMedia::updateOrCreate([
+            //             'name'=>$fileName,
+            //             'image'=>$fileName,
+            //             'path'=>'images/product_media',
+            //             'ordering'=> $img['id'] ? $img['ordering'] : $key,
+            //             'product_item_id'=>$productitem->id,
+
+            //         ]);
+                
+            //     }
+            
+            // }
+            $new_image = $product_item['image'];
+            $old_image = ProductMedia::where('product_item_id',$productitem->id)->pluck('name')->toArray();
+            
+            
+            
+            $old_image_delete= array_diff($old_image , $new_image);
+            $products = ProductMedia::where('product_item_id',$productitem->id)->whereIn('name',$old_image_delete)->delete();
+            
+            
+            $this->deleteImage($old_image_delete);
+            
+            
+            $update_new_image = array_diff($new_image,$old_image);
+            $this->moveImages($update_new_image,$productitem);
+            
+            foreach ($new_image as $key => $update_new) {
+                $update_ordering = ProductMedia::where('name',$update_new)->update(['ordering'=>$key+1]);
+            }
+            
         }
 
-
-            // if ($input['color']) {
-            //     $item_colors = $input['color'];
-            //     $item_prices = $input['price'];
-            //     $item_final_prices = $input['final_price'];
-            //     $item_is_availables = $input['is_available'];
-            //     $item_tags = $input['tags'];
-
-            //     $product_items = ProductItem::whereIn('id', $product_item_ids)->get();
-
-            //     foreach ($product_items as $key => $product_item) {
-            //         $product_item->color = $item_colors[$key];
-            //         $product_item->price = $item_prices[$key];
-            //         $product_item->final_price = $item_final_prices[$key];
-            //         $product_item->is_available = $item_is_availables[$key];
-            //         $product_item->tags = $item_tags[$key];
-            //         $product_item->save();
-            //     }
-            // }
-
-            // if ($request->hasFile('image')) {
-            //     $productMedias = ProductMedia::whereIn('product_item_id', $product_item_ids)->get();
-
-            //     $Productitleimages = $input['image'];
-            //     $files = [];
-
-            //     foreach ($Productitleimages as $key => $file) {
-            //         $titleimage = mt_rand(3, 9) . time() . '.' . $file->extension();
-            //         $files[] = $titleimage;
-            //         $file->move(public_path('images/product_media'), $titleimage);
-            //     }
-
-            //     foreach ($productMedias as $key => $mediaupdate) {
-            //         $mediaupdate->name = $files[$key];
-            //         $mediaupdate->image = $files[$key];
-            //         $mediaupdate->path = 'images/product_media';
-            //         $mediaupdate->save();
-            //     }
-            // }
-
-            // if ($input['itemname'] && $input['itemquantity']) {
-            //     $item_names = $input['itemname'];
-            //     $item_quantities = $input['itemquantity'];
-
-            //     $product_item_sizes = ProductItemSize::whereIn('product_item_id', $product_item_ids)->get();
-
-            //     foreach ($product_item_sizes as $key => $item_size) {
-            //         $item_size->itemname = $item_names[$key];
-            //         $item_size->itemquantity = $item_quantities[$key];
-            //         $item_size->save();
-            //     }
-            // }
-
-            return [
-                'type' => 'success',
-                'code' => 200,
-                'message' => "Product updated successfully",
-                'data' => $product
+        return [
+            'type' => 'success',
+            'code' => 200,
+            'message' => "Product updated successfully",
+            'data' => $product
             ];
         } catch (\Throwable $th) {
 
@@ -325,9 +288,26 @@ class ProductController extends Controller
         try {
 
             // dd();
-            $product->productItem()->productMedia()->delete();
-            $product->productItem()->productSize()->delete();
-            $product->productItem()->delete();
+            
+           $productitems = ProductItem::where('product_id',$product->id)->get();
+           foreach ($productitems as $key => $item) {
+         
+            $productsizes = ProductItemSize::where('product_item_id',$item->id)->get();
+            foreach ($productsizes as $key => $size) {
+            
+                $size->delete();
+            }
+
+            $productmedia = ProductMedia::where('product_item_id',$item->id)->get();
+
+            foreach ($productmedia as $key => $image) {
+              
+                unlink(public_path('images/product_media/'.$image->name));
+                $image->delete(); 
+            }
+            $item->delete();
+           }
+            
             $product->delete();
             $response = [
                 "type" => "success",
@@ -345,5 +325,50 @@ class ProductController extends Controller
             return response()->json($response, 500);
         }
     }
-}
+
+    public function moveImages($images , $productitem ){
+        // $new[] = public_path('image/temp');
+        
+        
+        
+        foreach ($images as $key=> $img) {
+            
+            $imgtype = \Str::after($img, '.');
+                if($imgtype == 'jpg' || $imgtype == 'jpeg' || $imgtype == 'png')
+                {
+                    $type = 'imaage';
+                }
+                else{
+                    $type = 'video';
+                }
+            $sourcePath = public_path('images/temp/'.$img);
+            
+            $destinationPath = public_path('images/product_media/'.$img);
+            File::move($sourcePath, $destinationPath);
+                    
+                    $product_media =  ProductMedia::create([
+                               'name'=>$img,
+                               "image"=>$img,
+                               "path"=>'images/product_media',
+                               "ordering"=>$key+1,
+                               'type'=>$type,
+                               "product_item_id"=>$productitem->id,
+       
+                           ]);
+       
+                       }
+                }
+
+                public function deleteImage($image){
+                    foreach ($image as $key => $value) {
+                        # code...
+                        // dd($value);
+                        unlink(public_path('images/product_media/'.$value));
+                    }
+                }
+
+            // ( 'images/product_media/'.$img , 'images/temp/'.$img);
+            
+    }
+
 

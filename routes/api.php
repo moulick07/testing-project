@@ -3,6 +3,7 @@
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 
+use App\Http\Controllers\UploadPhotoController;
 use App\Http\Controllers\VariationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -27,4 +28,7 @@ Route::get('/hello', function () {
 
 Route::apiResource('/product', ProductController::class);
 Route::apiResource('/category', CategoryController::class);
-Route::apiResource('/variation', VariationController::class);
+Route::apiResource('/category', CategoryController::class);
+Route::apiResource('/photo', UploadPhotoController::class);
+
+Route::post('/test', [ProductController::class,'test']);

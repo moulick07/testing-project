@@ -30,11 +30,20 @@ class ProductItem extends Model
          */
         public function productMedia()
         {
-            return $this->hasMany(ProductMedia::class, 'product_item_id');
+            return $this->hasMany(ProductMedia::class, 'product_item_id','id');
         }
         public function productSize()
         {
             return $this->hasMany(ProductItemSize::class, 'product_item_id');
         }
 
+        public static function boot() {
+            parent::boot();
+    
+            self::deleting(function($post) { 
+                    $post->productMedia()->delete();
+                    $post->productSize()->delete();
+                    // or call another method here after you declare above
+            });
+        }
     }
