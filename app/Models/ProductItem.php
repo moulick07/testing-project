@@ -5,11 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 
 class ProductItem extends Model
 {
-    use HasFactory,HasUuids;
+    use HasFactory,HasUuids,SoftDeletes;
+   
     protected $fillable = [
         
         'product_id',
@@ -28,22 +30,33 @@ class ProductItem extends Model
          *
          * @return \Illuminate\Database\Eloquent\Relations\HasMany
          */
-        public function productMedia()
-        {
-            return $this->hasMany(ProductMedia::class, 'product_item_id','id');
-        }
-        public function productSize()
-        {
-            return $this->hasMany(ProductItemSize::class, 'product_item_id');
-        }
-
-        public static function boot() {
-            parent::boot();
-    
-            self::deleting(function($post) { 
-                    $post->productMedia()->delete();
-                    $post->productSize()->delete();
-                    // or call another method here after you declare above
-            });
-        }
+       
+         protected static function boot()
+         {
+             parent::boot();
+     
+             static::deleting(function ($item) {
+                 // Delete all related sizes
+                 $item->sizes()->delete();
+     
+                 // Delete all related images
+                 $item->images()->each(function ($image) {
+                    // Unlink the image from local storage
+                    
+                   unlink(public_path('images/product_media/'.$image->name));
+                    $image->delete();
+                });
+             });
+            
+         }
+     
+         public function sizes()
+         {
+             return $this->hasMany(ProductItemSize::class);
+         }
+     
+         public function images()
+         {
+             return $this->hasMany(ProductMedia::class);
+         }
     }

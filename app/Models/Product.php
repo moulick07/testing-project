@@ -21,22 +21,19 @@ class Product extends Model
       
     ];
 
-    public static function boot()
+    protected static function boot()
     {
         parent::boot();
-        self::created(function($product){
-            $product->slug = \Str::slug($product->name).'/'.$product->id;
-        });
-        self::updated(function($product){
-            $product->slug = \Str::slug($product->name).'/'.$product->id; 
-        });
 
-       
+        static::deleting(function ($product) {
+            // Delete all related items
+            $product->items()->delete();
+        });
     }
-    public function productItem()
+
+    public function items()
     {
-        return $this->hasMany(ProductItem::class, 'product_id');
+        return $this->hasMany(ProductItem::class);
     }
-
-   
+  
 }

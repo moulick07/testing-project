@@ -73,46 +73,34 @@ class ProductController extends Controller
             $input = request()->all();
             $input['ordering'] = 1;
             $product = Product::create($input);
-            $input['product_id'] = $product->id;
+            // $input['product_id'] = $product->id;
           
             foreach ($input['product_item'] as $key => $product_item)
             {
                 
                 
-                $input['color'] = $product_item['color'];
-                $input['quantity'] = $product_item['quantity'];
-                $input['price'] = $product_item['price'];
-                $input['final_price'] = $product_item['final_price'];
-                $input['is_available'] = $product_item['is_available'];
-                $input['tags'] = $product_item['tags'];
-                $productitem = ProductItem::create($input);
-                
-                    // dd($product_item['image']);
+                // $input['color'] = $product_item['color'];
+                // $input['quantity'] = $product_item['quantity'];
+                // $input['price'] = $product_item['price'];
+                // $input['final_price'] = $product_item['final_price'];
+                // $input['is_available'] = $product_item['is_available'];
+                // $input['tags'] = $product_item['tags'];
+                $productitem = ProductItem::create([
+                    'color' => $product_item['color'],
+                    'quantity' => $product_item['quantity'],
+                    'price' => $product_item['price'],
+                    'final_price' => $product_item['final_price'],
+                    'is_available' => $product_item['is_available'],
+                    'tags' => $product_item['tags'],
+                    'product_id'=>$product->id,
+                    'ordering'=>$key+1
+                ]);
+
+
                     $this->moveImages($product_item['image'] ,$productitem);
-                    // if($img ==)
-                    // $base64Image = file_get_contents($img);
-                    // // $extension = explode('/',mime_content_type($img));
-
-                    // $fileName = mt_rand(3, 9) .time(); // You can generate a unique filename with the appropriate extension.
-                    
-                    // $folderPath = public_path('images/product_media'); 
-                    // if (!file_exists($folderPath)) {
-                    //     mkdir($folderPath, 0755, true); // Create the folder if it doesn't exist.
-                    // }
-                    // $imagePath = $folderPath . '/' . $fileName;
-                    
-                    // file_put_contents($imagePath, $base64Image);
-                    // $product_media =  ProductMedia::create([
-                    //     'name'=>$fileName,
-                    //     "image"=>$fileName,
-                    //     'path'=>'images/product_media',
-                    //     'ordering'=>$key+1,
-                    //     'product_item_id'=>$productitem->id,
-
-                    // ]);
                 
-                        
-                $testArray2=[];
+                
+                    $testArray2=[];
            
                 foreach ($product_item['product_item_size'] as $item_key => $itemname) {
                
@@ -289,25 +277,31 @@ class ProductController extends Controller
 
             // dd();
             
-           $productitems = ProductItem::where('product_id',$product->id)->get();
-           foreach ($productitems as $key => $item) {
+//            $productitems = ProductItem::where('product_id',$product->id)->get();
+//            foreach ($productitems as $key => $item) {
          
-            $productsizes = ProductItemSize::where('product_item_id',$item->id)->get();
-            foreach ($productsizes as $key => $size) {
+//             $productsizes = ProductItemSize::where('product_item_id',$item->id)->get();
+//             foreach ($productsizes as $key => $size) {
             
-                $size->delete();
-            }
+//                 $size->delete();
+//             }
 
-            $productmedia = ProductMedia::where('product_item_id',$item->id)->get();
+//             $productmedia = ProductMedia::where('product_item_id',$item->id)->get();
 
-            foreach ($productmedia as $key => $image) {
+//             foreach ($productmedia as $key => $image) {
               
-                unlink(public_path('images/product_media/'.$image->name));
-                $image->delete(); 
-            }
-            $item->delete();
-           }
-            
+//                 unlink(public_path('images/product_media/'.$image->name));
+//                 $image->delete(); 
+//             }
+
+//     $item->delete();
+// }
+    // dd($product->productItemSize());
+        $product_items = ProductItem::where('product_id',$product->id)->get();
+        foreach ($product_items as $key => $value) {
+            $value->delete();
+        }
+    
             $product->delete();
             $response = [
                 "type" => "success",
@@ -327,22 +321,20 @@ class ProductController extends Controller
     }
 
     public function moveImages($images , $productitem ){
-        // $new[] = public_path('image/temp');
-        
-        
-        
+
         foreach ($images as $key=> $img) {
-            
-            $imgtype = \Str::after($img, '.');
+            // dd($img->getClientOriginalName());
+          $imgtype = \Str::after($img, '.');
                 if($imgtype == 'jpg' || $imgtype == 'jpeg' || $imgtype == 'png')
                 {
-                    $type = 'imaage';
+                    $type = 'image';
                 }
                 else{
                     $type = 'video';
                 }
             $sourcePath = public_path('images/temp/'.$img);
             
+        
             $destinationPath = public_path('images/product_media/'.$img);
             File::move($sourcePath, $destinationPath);
                     
@@ -361,8 +353,7 @@ class ProductController extends Controller
 
                 public function deleteImage($image){
                     foreach ($image as $key => $value) {
-                        # code...
-                        // dd($value);
+                     
                         unlink(public_path('images/product_media/'.$value));
                     }
                 }

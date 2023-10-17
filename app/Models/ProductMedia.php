@@ -5,12 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 
 class ProductMedia extends Model
 {
 
-    use HasFactory,HasUuids;
+    use HasFactory,HasUuids,SoftDeletes;
     protected $table = 'product_medias';
     protected $fillable = [
         
@@ -21,4 +22,5 @@ class ProductMedia extends Model
         'image',
         'ordering'
      ];
+
 }
