@@ -3,6 +3,8 @@
 namespace App\Http\Requests\product;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Request;
+
 
 class StoreProductItemSizeRequest extends FormRequest
 {

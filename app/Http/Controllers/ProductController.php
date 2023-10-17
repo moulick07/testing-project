@@ -37,33 +37,7 @@ class ProductController extends Controller
      */
 
     
-     public function test(Request $request){
-
-      $request = request()->all();
-        foreach ($request['image'] as $key=> $img) {
-            $base64Image = file_get_contents($img);
-            $fileName = mt_rand(3, 9) .time(). '.png'; // You can generate a unique filename with the appropriate extension.
-            $folderPath = public_path('images/product_media'); 
-            if (!file_exists($folderPath)) {
-                mkdir($folderPath, 0755, true); // Create the folder if it doesn't exist.
-            }
-            $imagePath = $folderPath . '/' . $fileName;
-
-            // Save the image to the folder in the public directory.
-           $data = file_put_contents($imagePath, $base64Image);
-          
-            // $product_media =  ProductMedia::create([
-            //     'name'=>$fileName,
-            //     "image"=>$fileName,
-            //     'path'=>'images/product_media',
-            //     'ordering'=>$key+1,
-            //     'product_item_id'=>$productitem->id,
-
-            // ]);
-        
-        }
-     }
-    public function store(Request $request)
+    public function store(StoreProductRequest $request)
     {
      
         try {
@@ -120,7 +94,7 @@ class ProductController extends Controller
                 'type' => 'success',
                 'code' => 200,
                 'message' => "Product store successfully",
-                'data' => $product,
+                'data' => $product, $productitem->id
                 
             ];   
             
@@ -148,7 +122,7 @@ class ProductController extends Controller
             'type' => 'success',
             'code' => 200,
             'message' => "Detail Product",
-            'data' => $product
+            'data' => $product ,
         ];
 
         return response()->json($response, 200);
@@ -178,7 +152,7 @@ class ProductController extends Controller
                 $testArray['final_price'] = $product_item['final_price'];
                 $testArray['is_available'] = $product_item['is_available'];
                 $testArray['tags'] = $product_item['tags'];
-                $testArray['ordering'] = $key;
+                $testArray['ordering'] = $key+1;
                
                 $productitem = ProductItem::updateOrCreate(['id'=>$product_item['id']],$testArray);
          
@@ -190,6 +164,7 @@ class ProductController extends Controller
                     'itemquantity'=>$itemname['itemquantity'],
                     'product_item_id' =>$productitem->id
                 ];
+
                
                 ProductItemSize::updateOrCreate(['id'=>$itemname['id']],$testArray2);
             }
@@ -275,28 +250,6 @@ class ProductController extends Controller
     {
         try {
 
-            // dd();
-            
-//            $productitems = ProductItem::where('product_id',$product->id)->get();
-//            foreach ($productitems as $key => $item) {
-         
-//             $productsizes = ProductItemSize::where('product_item_id',$item->id)->get();
-//             foreach ($productsizes as $key => $size) {
-            
-//                 $size->delete();
-//             }
-
-//             $productmedia = ProductMedia::where('product_item_id',$item->id)->get();
-
-//             foreach ($productmedia as $key => $image) {
-              
-//                 unlink(public_path('images/product_media/'.$image->name));
-//                 $image->delete(); 
-//             }
-
-//     $item->delete();
-// }
-    // dd($product->productItemSize());
         $product_items = ProductItem::where('product_id',$product->id)->get();
         foreach ($product_items as $key => $value) {
             $value->delete();
@@ -336,6 +289,10 @@ class ProductController extends Controller
             
         
             $destinationPath = public_path('images/product_media/'.$img);
+            $folderPath = public_path('images/product_media');  
+                    if (!file_exists($folderPath)) {
+                        mkdir($folderPath, 0755, true); // Create the folder if it doesn't exist.
+                    }
             File::move($sourcePath, $destinationPath);
                     
                     $product_media =  ProductMedia::create([

@@ -21,6 +21,16 @@ class Product extends Model
       
     ];
 
+    public static function generateSlug($title)
+    {
+  
+      $slug = \Str::slug($title);// Query to check if slug already exists
+      $qry =Product::whereSlug($slug);
+  
+  
+      return $slug; // Return the generated slug
+  
+    }
     protected static function boot()
     {
         parent::boot();
