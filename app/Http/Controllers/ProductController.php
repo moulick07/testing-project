@@ -37,9 +37,9 @@ class ProductController extends Controller
      */
 
     
-    public function store(StoreProductRequest $request)
+    public function store(Request $request)
     {
-     
+        $input = request()->all();
         try {
 
             DB::beginTransaction();
@@ -212,7 +212,6 @@ class ProductController extends Controller
             $products = ProductMedia::where('product_item_id',$productitem->id)->whereIn('name',$old_image_delete)->delete();
             
             
-            $this->deleteImage($old_image_delete);
             
             
             $update_new_image = array_diff($new_image,$old_image);
@@ -222,6 +221,7 @@ class ProductController extends Controller
                 $update_ordering = ProductMedia::where('name',$update_new)->update(['ordering'=>$key+1]);
             }
             
+            $this->deleteImage($old_image_delete);
         }
 
         return [
@@ -276,7 +276,7 @@ class ProductController extends Controller
     public function moveImages($images , $productitem ){
 
         foreach ($images as $key=> $img) {
-            // dd($img->getClientOriginalName());
+           
           $imgtype = \Str::after($img, '.');
                 if($imgtype == 'jpg' || $imgtype == 'jpeg' || $imgtype == 'png')
                 {
