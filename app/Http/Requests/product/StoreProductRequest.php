@@ -19,24 +19,33 @@ class StoreProductRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
+
+    public function validationData()
+    {
+        return json_decode($this->getContent(), true);
+    }
     public function rules(): array
     {
         return [
-            'name' => 'required',
-            'short_description' => 'required|max:255',
-            'brand' => 'required',
+            'name' => 'required|string|max:100',
             'category_id' => 'required',
-            'product_type' => 'required',
-            'color' => 'required',
-            'price' => 'required',
-            'final_price' => 'required',
-            'quantity' => 'required',
-            'tags' => 'required',
-            'image*' => 'required|mimes:png,jpg,jpeg|max:2048',
-            'itemname*' => 'required',
-            'itemquantity*' => 'required',
+            'brand' => 'required|max:100',
+            'is_active' => 'required|boolean',
+            'product_type' => 'required|',
+            'short_description' => 'required|max:150',
+            'product_item' => 'required|array',
+            'product_item.*.color' => 'required',
+            'product_item.*.tags' => 'required',
+            'product_item.*.price' => 'required|numeric',
+            'product_item.*.quantity' => 'required|numeric',
+            'product_item.*.final_price' => 'required|numeric',
+            'product_item.*.is_available' => 'required|boolean',
+            'product_item.*.product_item_size' => 'required|array',
+            'product_item.*.product_item_size.*.itemname' => 'required|max:100',
+            'product_item.*.product_item_size.*.itemquantity' => 'required|numeric',
+            'product_item.*.image' => 'required',
+            'product_item.*.image.*' => 'required',
 
-            // Add other rules here
         ];
     }
 
