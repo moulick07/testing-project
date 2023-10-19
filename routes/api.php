@@ -30,5 +30,5 @@ Route::apiResource('/product', ProductController::class);
 Route::apiResource('/category', CategoryController::class);
 Route::apiResource('/category', CategoryController::class);
 Route::apiResource('/photo', UploadPhotoController::class);
-
+Route::put('/product/{id}/order',[ProductController::class,'updateOrder']);
 Route::post('/test', [ProductController::class,'test']);
