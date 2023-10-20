@@ -151,6 +151,7 @@ class ProductController extends Controller
 
 
                     ProductItemSize::updateOrCreate(['id' => $itemname['id']], $testArray2);
+                    
                 }
 
                 $new_image = $product_item['image'];
@@ -265,19 +266,15 @@ class ProductController extends Controller
         }
     }
 
-    public function updateOrder($id, Request $request){
-        
+    public function updateOrder($id , Request $request){
 
-        $data = $request->validate([
-            'ordering' => 'required|array',
-            'ordering.*.id' => 'required|integer',
-            'ordering.*.order' => 'required|integer',
-        ]);
+      
+        $data = request()->all();
+
         $ids = collect($data['ordering'])->pluck('id')->toArray();
+       
         $orders = collect($data['ordering'])->pluck('order')->toArray();
-     
         $products = ProductItem::whereIn('id', $ids)->get();
-    
         foreach ($products as $product) {
             $productId = $product->id;
             $order = $orders[array_search($productId, $ids)];
@@ -289,7 +286,7 @@ class ProductController extends Controller
             'type' => 'success',
             'code' => 200,
             'message' => 'Ordering updated successfully',
-            'data' => ['id' => $id] // Include the ID in the response
+            'data' => ['ordering'=>$orders,'id' => $ids ] // Include the ID in the response
         ];
 
         return response()->json($response, 200);
