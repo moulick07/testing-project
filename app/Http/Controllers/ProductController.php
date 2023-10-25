@@ -17,8 +17,20 @@ use Illuminate\Support\Facades\File;
 class ProductController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the product with its mutiple items and multiple images and sizes.
+     * 
+     * @OA\Get(
+     * path="/api/product",
+     * operationId="getProduct",
+     * tags={"ProductController"},
+     * summary="Get list of Products",
+     * description="Returns Product data with its items  and there image and multiple sizes",
+     * 
+     * @OA\Response(response=200,description="Successful operation",@OA\JsonContent()),
+     * security={{ "bearerAuth":{} }}
+     * )
      */
+
     public function index()
     {
         $products = Product::with('items', 'items.images', 'items.sizes')->paginate(10);
@@ -34,9 +46,32 @@ class ProductController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     */
+     * This is the store method of the ProductController class.
+     * It handles the creation of a new product.
+     * The method receives a StoreProductRequest object as a parameter.
+     * It starts a database transaction and creates a new product using the input data.
+     * It also creates product items and their sizes, and associates them with the product.
+     * If successful, it commits the transaction and returns a JSON response with the created product.
+     * If an error occurs, it rolls back the transaction and returns an error JSON response.
 
+ * @OA\Post(
+ *   path="/api/product",
+ *   operationId="createProduct",
+ *   tags={"ProductController"},
+ *   summary="Create a new product",
+ *   description="Create a new product and its associated product items and sizes.",
+ *   @OA\RequestBody(
+ *     required=true,
+ *     @OA\JsonContent(ref="")
+ *   ),
+ *   @OA\Response(
+ *     response=200,
+ *     description="Product created successfully",
+ *     @OA\JsonContent(ref="")
+ *   ),
+ *   security={{ "bearerAuth": {} }}
+ * )
+ */
 
     public function store(StoreProductRequest $request)
     {
@@ -52,9 +87,9 @@ class ProductController extends Controller
             foreach ($input['product_item'] as $key => $product_item) {
 
                 $input['product_item'][$key]['product_id'] = $product->id;
-                $input['product_item'][$key] ['ordering'] = $key+1;
+                $input['product_item'][$key]['ordering'] = $key + 1;
                 $productitem = ProductItem::create(
-                    $input['product_item'][$key] 
+                    $input['product_item'][$key]
                 );
 
                 $this->moveImages($product_item['image'], $productitem);
@@ -99,8 +134,45 @@ class ProductController extends Controller
 
 
 
+
     /**
-     * Display the specified resource.
+     * Retrieves the details of a product and returns it as a JSON response.
+     *
+     * @param  Product  $product  The product to retrieve details for
+     * @return \Illuminate\Http\JsonResponse
+     *  * @OA\Get(
+     *      path="/api/product/{id}",
+     *      operationId="getProductByID",
+     *      tags={"ProductController"},
+     *      summary="Get product information",
+     *      description="Returns  data",
+     *      @OA\Parameter(
+     *          name="id",
+     *          description="Product id",
+     *          required=true,
+     *          in="path",
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\JsonContent(ref="")
+     *       ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Bad Request"
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      )
+     * )
      */
     public function show(Product $product)
     {
@@ -111,24 +183,72 @@ class ProductController extends Controller
             'message' => "Detail Product",
             'data' => $product,
         ];
-
         return response()->json($response, 200);
-
     }
 
+
     /**
-     * Update the specified resource in storage.
+    * Summary: This code is responsible for updating a product and its associated items and images.
+    * 
+    * Description: This code receives a request to update a product and its associated items and images. It first retrieves the input data from the request and updates the product with the new data. Then, it iterates through each product item in the input data and updates or creates the corresponding product item and its associated sizes. It also handles the addition and deletion of product images. Finally, it returns a response indicating the success or failure of the update operation.
+    * 
+    * @param updateProductRequest $request: The request containing the updated product data.
+    * @param Product $product: The product instance to be updated.
+    * @return array: The response indicating the success or failure of the update operation.
+    * 
+    * @OA\Put(
+     *      path="/api/product/{id}",
+     *      operationId="updateProduct",
+     *      tags={"ProductController"},
+     *      summary="Update existing product",
+     *      description="Returns updated Product data",
+     *      @OA\Parameter(
+     *          name="id",
+     *          description="Product id",
+     *          required=true,
+     *          in="path",
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *      @OA\RequestBody(
+     *          required=true,
+     *          @OA\JsonContent(ref="")
+     *      ),
+     *      @OA\Response(
+     *          response=202,
+     *          description="Successful operation",
+     *          @OA\JsonContent(ref="")
+     *       ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Bad Request"
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      ),
+     *      @OA\Response(
+     *          response=404,
+     *          description="Resource Not Found"
+     *      )
+     * )
+  
      */
     public function update(updateProductRequest $request, Product $product)
     {
-
         try {
-
+            // Update the product with the new input data
             $input = request()->all();
-
             $product->update($input);
-            $testArray = [];
+
+            // Iterate through each product item in the input data
             foreach ($input['product_item'] as $key => $product_item) {
+                // Update or create the product item and its associated sizes
                 $testArray['product_id'] = $product->id;
                 $testArray['color'] = $product_item['color'];
                 $testArray['quantity'] = $product_item['quantity'];
@@ -137,46 +257,35 @@ class ProductController extends Controller
                 $testArray['is_available'] = $product_item['is_available'];
                 $testArray['tags'] = $product_item['tags'];
                 $testArray['ordering'] = $key + 1;
-
                 $productitem = ProductItem::updateOrCreate(['id' => $product_item['id']], $testArray);
 
-                $testArray2 = [];
+                // Update or create the product item's sizes
                 foreach ($product_item['product_item_size'] as $item_key => $itemname) {
-
                     $testArray2 = [
                         'itemname' => $itemname['itemname'],
                         'itemquantity' => $itemname['itemquantity'],
                         'product_item_id' => $productitem->id
                     ];
-
-
                     ProductItemSize::updateOrCreate(['id' => $itemname['id']], $testArray2);
-                    
                 }
 
+                // Handle the addition and deletion of product images
                 $new_image = $product_item['image'];
                 $old_image = ProductMedia::where('product_item_id', $productitem->id)->pluck('name')->toArray();
-
-
-
                 $old_image_delete = array_diff($old_image, $new_image);
-                
-                
-                
-                
                 $update_new_image = array_diff($new_image, $old_image);
-                $this->moveImages($update_new_image,$productitem);
-
-
+                $this->moveImages($update_new_image, $productitem);
                 foreach ($new_image as $key => $update_new) {
                     $update_ordering = ProductMedia::where('name', $update_new)->update(['ordering' => $key + 1]);
                 }
-                
                 $products = ProductMedia::where('product_item_id', $productitem->id)->whereIn('name', $old_image_delete)->delete();
                 $this->deleteImage($old_image_delete);
             }
+
+            // Load the updated product with its associated items and images and sizes.
             $product->load('items', 'items.images', 'items.sizes');
 
+            // Return the success response
             return [
                 'type' => 'success',
                 'code' => 200,
@@ -184,7 +293,7 @@ class ProductController extends Controller
                 'data' => $product
             ];
         } catch (\Throwable $th) {
-
+            // Return the error response
             $response = [
                 'type' => 'error',
                 'code' => 500,
@@ -192,22 +301,58 @@ class ProductController extends Controller
             ];
             return response()->json($response, 500);
         }
-
     }
 
 
+
     /**
-     * Remove the specified resource from storage.
+     *
+     * Summary: This function deletes a product and its associated product items from the database.
+     * It first retrieves all product items related to the given product, deletes them one by one,
+     * and then deletes the product itself. It returns a JSON response indicating the success
+     * or failure of the operation along with an appropriate message.
+     * 
+     * * @OA\Delete(
+     *      path="/api/product/{id}",
+     *      operationId="deleteProduct",
+     *      tags={"ProductController"},
+     *      summary="Delete existing product",
+     *      description="Deletes a record and returns no content",
+     *      @OA\Parameter(
+     *          name="id",
+     *          description="Product id",
+     *          required=true,
+     *          in="path",
+     *          @OA\Schema(
+     *              type="string"
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=204,
+     *          description="Successful operation",
+     *          @OA\JsonContent()
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      ),
+     *      @OA\Response(
+     *          response=404,
+     *          description="Resource Not Found"
+     *      )
+     * )
      */
     public function destroy(Product $product)
     {
         try {
-
             $product_items = ProductItem::where('product_id', $product->id)->get();
             foreach ($product_items as $key => $value) {
                 $value->delete();
             }
-
             $product->delete();
             $response = [
                 "type" => "success",
@@ -215,7 +360,6 @@ class ProductController extends Controller
                 "message" => "Product deleted successfully"
             ];
             return response()->json($response, 200);
-
         } catch (\Throwable $th) {
             $response = [
                 'type' => 'error',
@@ -226,11 +370,19 @@ class ProductController extends Controller
         }
     }
 
+    /**
+     * This code moves images from a temporary folder to a product media folder.
+     * It determines the type of each image (either 'image' or 'video') based on the file extension.
+     * The code creates the destination folder if it doesn't exist and moves the image to the destination.
+     * It then creates a ProductMedia record for each image, storing its name, path, ordering, type, and product item ID.
+     *
+     * @param array $images - An array of image file names
+     * @param object $productitem - The product item object
+     * @return void
+     */
     public function moveImages($images, $productitem)
     {
-
         foreach ($images as $key => $img) {
-
             $imgtype = \Str::after($img, '.');
             if ($imgtype == 'jpg' || $imgtype == 'jpeg' || $imgtype == 'png') {
                 $type = 'image';
@@ -238,57 +390,54 @@ class ProductController extends Controller
                 $type = 'video';
             }
             $sourcePath = public_path('images/temp/' . $img);
-
-
             $destinationPath = public_path('images/product_media/' . $img);
             $folderPath = public_path('images/product_media');
             if (!file_exists($folderPath)) {
                 mkdir($folderPath, 0755, true); // Create the folder if it doesn't exist.
             }
             File::move($sourcePath, $destinationPath);
-
             $product_media = ProductMedia::create([
                 'name' => $img,
                 "path" => 'images/product_media',
                 "ordering" => $key + 1,
                 'type' => $type,
                 "product_item_id" => $productitem->id,
-
             ]);
-
         }
     }
+    /**
+     * Deletes the specified images from the product media folder.
+     *
+     * @param array $image The array containing the names of the images to be deleted
+     * @return void
+     */
     public function deleteImage($image)
     {
         foreach ($image as $key => $value) {
-
             unlink(public_path('images/product_media/' . $value));
         }
     }
 
-    public function updateOrder($id , Request $request){
-
-      
+    /**
+     * Update the ordering of products in the database.
+     *
+     * @param int $id The ID of the Product.
+     * @param \Illuminate\Http\Request $request The HTTP request instance.
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateOrder($id, Request $request)
+    {
         $data = request()->all();
-
-        $ids = collect($data['ordering'])->pluck('id')->toArray();
-       
-        $orders = collect($data['ordering'])->pluck('order')->toArray();
-        $products = ProductItem::whereIn('id', $ids)->get();
-        foreach ($products as $product) {
-            $productId = $product->id;
-            $order = $orders[array_search($productId, $ids)];
-            $product->update(['ordering' => $order]);
+        foreach ($data['ordering'] as $product_item) {
+            $product_item_id = $product_item['id'];
+            ProductItem::where('id', $product_item_id)->update(['ordering' => $product_item['order']]);
         }
-       
-
         $response = [
             'type' => 'success',
             'code' => 200,
             'message' => 'Ordering updated successfully',
-            'data' => ['ordering'=>$orders,'id' => $ids ] // Include the ID in the response
+            'data' => $data // Include the ID in the response
         ];
-
         return response()->json($response, 200);
     }
 
