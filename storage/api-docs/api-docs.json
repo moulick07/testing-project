@@ -37,7 +37,61 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": ""
+                               
+                                    "name": "sparx" ,
+                                    "category_id": "1212",
+                                    "brand": "Zudio",
+                                    "is_active":1,
+                                    "product_type": "clothes",
+                                    "short_description": "clothing and accesories",
+                                    "product_item": [
+                                                {
+                                                    
+                                                    "color":"Green",  
+                                                    "tags": "long tunic",
+                                                    "price": "10",
+                                                    "quantity":"10",
+                                                    "final_price" : "200",
+                                                    "is_available": "1",
+                                                    "product_item_size":[
+                                                        {
+                                                            
+                                                            "itemname":"sm",
+                                                            "itemquantity":"50"  
+                                                        },
+                                                            {
+                                                            
+                                                            "itemname":"xl",
+                                                            "itemquantity":"10"
+                                                        }
+                                                    ],
+                                                        "image" : [ "41698399340.jpg", "51698399340.jpg"]  
+                                                },
+                                                {
+                                                    
+                                                        "color":"olive green",
+                                                    "tags": "short tunic",
+                                                    "price": "10",
+                                                    "final_price" : "200",
+                                                        "quantity":"20",
+                                                    "is_available": "1",
+                                                    "product_item_size":[
+                                                        {
+                                                            "itemname":"s",
+                                                            "itemquantity":"50"
+                                                        },
+                                                            {
+                                                            "itemname":"m",
+                                                            "itemquantity":"10"
+                                                        }
+                                                    ],
+                                                    "image"  : ["91698399340.jpg"]
+                                                    
+                                                }
+                                              
+                                                
+                                            ]
+                                
                             }
                         }
                     }
@@ -48,8 +102,130 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": ""
-                                }
+                                    
+                                        "type": "success",
+                                        "code": 200,
+                                        "message": "Product store successfully",
+                                        "data": {
+                                          "name": "sparx",
+                                          "category_id": "1212",
+                                          "brand": "Zudio",
+                                          "is_active": 1,
+                                          "product_type": "clothes",
+                                          "short_description": "clothing and accesories",
+                                          "id": "9a77f183-5ccc-4cdc-ab4b-d72a2bbef524",
+                                          "updated_at": "2023-10-27T09:37:17.000000Z",
+                                          "created_at": "2023-10-27T09:37:17.000000Z",
+                                          "items": [
+                                            {
+                                              "id": "9a77f183-5d07-486c-b6a6-5762180b2c87",
+                                              "product_id": "9a77f183-5ccc-4cdc-ab4b-d72a2bbef524",
+                                              "color": "Green",
+                                              "price": 10,
+                                              "final_price": "200",
+                                              "tags": "long tunic",
+                                              "is_available": 1,
+                                              "quantity": 10,
+                                              "ordering": 1,
+                                              "created_at": "2023-10-27T09:37:17.000000Z",
+                                              "updated_at": "2023-10-27T09:37:17.000000Z",
+                                              "deleted_at": null,
+                                              "images": [
+                                                {
+                                                  "id": "9a77f183-5d3e-4b43-b116-f1853dda2256",
+                                                  "product_item_id": "9a77f183-5d07-486c-b6a6-5762180b2c87",
+                                                  "path": "images/product_media",
+                                                  "name": "41698399340.jpg",
+                                                  "ordering": 1,
+                                                  "type": "Image",
+                                                  "created_at": "2023-10-27T09:37:17.000000Z",
+                                                  "updated_at": "2023-10-27T09:37:17.000000Z",
+                                                  "deleted_at": null
+                                                },
+                                                {
+                                                  "id": "9a77f183-5d62-488d-a9ff-fd34492f98c0",
+                                                  "product_item_id": "9a77f183-5d07-486c-b6a6-5762180b2c87",
+                                                  "path": "images/product_media",
+                                                  "name": "51698399340.jpg",
+                                                  "ordering": 2,
+                                                  "type": "Image",
+                                                  "created_at": "2023-10-27T09:37:17.000000Z",
+                                                  "updated_at": "2023-10-27T09:37:17.000000Z",
+                                                  "deleted_at": null
+                                                }
+                                              ],
+                                              "sizes": [
+                                                {
+                                                  "id": "9a77f183-5d86-43b8-8bc4-bd2dd19d2b26",
+                                                  "product_item_id": "9a77f183-5d07-486c-b6a6-5762180b2c87",
+                                                  "itemname": "sm",
+                                                  "itemquantity": 50,
+                                                  "created_at": "2023-10-27T09:37:17.000000Z",
+                                                  "updated_at": "2023-10-27T09:37:17.000000Z",
+                                                  "deleted_at": null
+                                                },
+                                                {
+                                                  "id": "9a77f183-5dac-48a7-8f11-8dc437e41122",
+                                                  "product_item_id": "9a77f183-5d07-486c-b6a6-5762180b2c87",
+                                                  "itemname": "xl",
+                                                  "itemquantity": 10,
+                                                  "created_at": "2023-10-27T09:37:17.000000Z",
+                                                  "updated_at": "2023-10-27T09:37:17.000000Z",
+                                                  "deleted_at": null
+                                                }
+                                              ]
+                                            },
+                                            {
+                                              "id": "9a77f183-5dcf-4b83-a535-65a0a9a773e8",
+                                              "product_id": "9a77f183-5ccc-4cdc-ab4b-d72a2bbef524",
+                                              "color": "olive green",
+                                              "price": 10,
+                                              "final_price": "200",
+                                              "tags": "short tunic",
+                                              "is_available": 1,
+                                              "quantity": 20,
+                                              "ordering": 2,
+                                              "created_at": "2023-10-27T09:37:17.000000Z",
+                                              "updated_at": "2023-10-27T09:37:17.000000Z",
+                                              "deleted_at": null,
+                                              "images": [
+                                                {
+                                                  "id": "9a77f183-5df8-4868-b0fa-d6f004fad2d2",
+                                                  "product_item_id": "9a77f183-5dcf-4b83-a535-65a0a9a773e8",
+                                                  "path": "images/product_media",
+                                                  "name": "91698399340.jpg",
+                                                  "ordering": 1,
+                                                  "type": "Image",
+                                                  "created_at": "2023-10-27T09:37:17.000000Z",
+                                                  "updated_at": "2023-10-27T09:37:17.000000Z",
+                                                  "deleted_at": null
+                                                }
+                                              ],
+                                              "sizes": [
+                                                {
+                                                  "id": "9a77f183-5e13-484c-a1ae-d15d0aaca2b2",
+                                                  "product_item_id": "9a77f183-5dcf-4b83-a535-65a0a9a773e8",
+                                                  "itemname": "s",
+                                                  "itemquantity": 50,
+                                                  "created_at": "2023-10-27T09:37:17.000000Z",
+                                                  "updated_at": "2023-10-27T09:37:17.000000Z",
+                                                  "deleted_at": null
+                                                },
+                                                {
+                                                  "id": "9a77f183-5e2d-47a7-b49d-f4cd152ebfe3",
+                                                  "product_item_id": "9a77f183-5dcf-4b83-a535-65a0a9a773e8",
+                                                  "itemname": "m",
+                                                  "itemquantity": 10,
+                                                  "created_at": "2023-10-27T09:37:17.000000Z",
+                                                  "updated_at": "2023-10-27T09:37:17.000000Z",
+                                                  "deleted_at": null
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      }
+
                             }
                         }
                     }
@@ -136,7 +312,236 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": ""
+                                    "type": "success",
+                                    "code": 200,
+                                    "message": "Product updated successfully",
+                                    "data": {
+                                      "id": "9a77f183-5ccc-4cdc-ab4b-d72a2bbef524",
+                                      "category_id": "1212",
+                                      "name": "Update sparx",
+                                      "slug": null,
+                                      "short_description": "clothing and accesories",
+                                      "product_type": "clothes",
+                                      "is_active": 1,
+                                      "brand": "Zudio",
+                                      "created_at": "2023-10-27T09:37:17.000000Z",
+                                      "updated_at": "2023-10-27T09:40:09.000000Z",
+                                      "deleted_at": null,
+                                      "items": [
+                                        {
+                                          "id": "9a77f183-5d07-486c-b6a6-5762180b2c87",
+                                          "product_id": "9a77f183-5ccc-4cdc-ab4b-d72a2bbef524",
+                                          "color": "black",
+                                          "price": 10,
+                                          "final_price": "200",
+                                          "tags": "long tunic",
+                                          "is_available": 1,
+                                          "quantity": 10,
+                                          "ordering": 1,
+                                          "created_at": "2023-10-27T09:37:17.000000Z",
+                                          "updated_at": "2023-10-27T09:41:20.000000Z",
+                                          "deleted_at": null,
+                                          "images": [
+                                            {
+                                              "id": "9a77f183-5d3e-4b43-b116-f1853dda2256",
+                                              "product_item_id": "9a77f183-5d07-486c-b6a6-5762180b2c87",
+                                              "path": "images/product_media",
+                                              "name": "41698399340.jpg",
+                                              "ordering": 1,
+                                              "type": "Image",
+                                              "created_at": "2023-10-27T09:37:17.000000Z",
+                                              "updated_at": "2023-10-27T09:43:04.000000Z",
+                                              "deleted_at": null
+                                            }
+                                          ],
+                                          "sizes": [
+                                            {
+                                              "id": "9a77f183-5d86-43b8-8bc4-bd2dd19d2b26",
+                                              "product_item_id": "9a77f183-5d07-486c-b6a6-5762180b2c87",
+                                              "itemname": "sm",
+                                              "itemquantity": 50,
+                                              "created_at": "2023-10-27T09:37:17.000000Z",
+                                              "updated_at": "2023-10-27T09:37:17.000000Z",
+                                              "deleted_at": null
+                                            },
+                                            {
+                                              "id": "9a77f183-5dac-48a7-8f11-8dc437e41122",
+                                              "product_item_id": "9a77f183-5d07-486c-b6a6-5762180b2c87",
+                                              "itemname": "xl",
+                                              "itemquantity": 10,
+                                              "created_at": "2023-10-27T09:37:17.000000Z",
+                                              "updated_at": "2023-10-27T09:37:17.000000Z",
+                                              "deleted_at": null
+                                            },
+                                            {
+                                              "id": "9a77f37d-8ead-4b30-9b41-c769c257e848",
+                                              "product_item_id": "9a77f183-5d07-486c-b6a6-5762180b2c87",
+                                              "itemname": "sm",
+                                              "itemquantity": 50,
+                                              "created_at": "2023-10-27T09:42:48.000000Z",
+                                              "updated_at": "2023-10-27T09:42:48.000000Z",
+                                              "deleted_at": null
+                                            },
+                                            {
+                                              "id": "9a77f37d-94fb-4d05-b348-c9de9d9bfdaf",
+                                              "product_item_id": "9a77f183-5d07-486c-b6a6-5762180b2c87",
+                                              "itemname": "xl",
+                                              "itemquantity": 10,
+                                              "created_at": "2023-10-27T09:42:48.000000Z",
+                                              "updated_at": "2023-10-27T09:42:48.000000Z",
+                                              "deleted_at": null
+                                            },
+                                            {
+                                              "id": "9a77f395-d974-41a2-93e8-c183e1af07ad",
+                                              "product_item_id": "9a77f183-5d07-486c-b6a6-5762180b2c87",
+                                              "itemname": "sm",
+                                              "itemquantity": 50,
+                                              "created_at": "2023-10-27T09:43:04.000000Z",
+                                              "updated_at": "2023-10-27T09:43:04.000000Z",
+                                              "deleted_at": null
+                                            },
+                                            {
+                                              "id": "9a77f395-dbb0-49f3-b41c-790137ef17e8",
+                                              "product_item_id": "9a77f183-5d07-486c-b6a6-5762180b2c87",
+                                              "itemname": "xl",
+                                              "itemquantity": 10,
+                                              "created_at": "2023-10-27T09:43:04.000000Z",
+                                              "updated_at": "2023-10-27T09:43:04.000000Z",
+                                              "deleted_at": null
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "id": "9a77f183-5dcf-4b83-a535-65a0a9a773e8",
+                                          "product_id": "9a77f183-5ccc-4cdc-ab4b-d72a2bbef524",
+                                          "color": "olive green",
+                                          "price": 10,
+                                          "final_price": "200",
+                                          "tags": "short tunic",
+                                          "is_available": 1,
+                                          "quantity": 20,
+                                          "ordering": 2,
+                                          "created_at": "2023-10-27T09:37:17.000000Z",
+                                          "updated_at": "2023-10-27T09:37:17.000000Z",
+                                          "deleted_at": null,
+                                          "images": [
+                                            {
+                                              "id": "9a77f183-5df8-4868-b0fa-d6f004fad2d2",
+                                              "product_item_id": "9a77f183-5dcf-4b83-a535-65a0a9a773e8",
+                                              "path": "images/product_media",
+                                              "name": "91698399340.jpg",
+                                              "ordering": 1,
+                                              "type": "Image",
+                                              "created_at": "2023-10-27T09:37:17.000000Z",
+                                              "updated_at": "2023-10-27T09:43:04.000000Z",
+                                              "deleted_at": null
+                                            }
+                                          ],
+                                          "sizes": [
+                                            {
+                                              "id": "9a77f183-5e13-484c-a1ae-d15d0aaca2b2",
+                                              "product_item_id": "9a77f183-5dcf-4b83-a535-65a0a9a773e8",
+                                              "itemname": "s",
+                                              "itemquantity": 50,
+                                              "created_at": "2023-10-27T09:37:17.000000Z",
+                                              "updated_at": "2023-10-27T09:37:17.000000Z",
+                                              "deleted_at": null
+                                            },
+                                            {
+                                              "id": "9a77f183-5e2d-47a7-b49d-f4cd152ebfe3",
+                                              "product_item_id": "9a77f183-5dcf-4b83-a535-65a0a9a773e8",
+                                              "itemname": "m",
+                                              "itemquantity": 10,
+                                              "created_at": "2023-10-27T09:37:17.000000Z",
+                                              "updated_at": "2023-10-27T09:37:17.000000Z",
+                                              "deleted_at": null
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "id": "9a77f37d-9b4d-455f-8ff8-9c34e31067d4",
+                                          "product_id": "9a77f183-5ccc-4cdc-ab4b-d72a2bbef524",
+                                          "color": "olive green",
+                                          "price": 10,
+                                          "final_price": "200",
+                                          "tags": "short tunic",
+                                          "is_available": 1,
+                                          "quantity": 20,
+                                          "ordering": 2,
+                                          "created_at": "2023-10-27T09:42:48.000000Z",
+                                          "updated_at": "2023-10-27T09:42:48.000000Z",
+                                          "deleted_at": null,
+                                          "images": [],
+                                          "sizes": [
+                                            {
+                                              "id": "9a77f37d-9c71-4b47-bad6-f18d4aea29d1",
+                                              "product_item_id": "9a77f37d-9b4d-455f-8ff8-9c34e31067d4",
+                                              "itemname": "s",
+                                              "itemquantity": 50,
+                                              "created_at": "2023-10-27T09:42:48.000000Z",
+                                              "updated_at": "2023-10-27T09:42:48.000000Z",
+                                              "deleted_at": null
+                                            },
+                                            {
+                                              "id": "9a77f37d-9d21-4c40-a6ce-cc195baf1a5c",
+                                              "product_item_id": "9a77f37d-9b4d-455f-8ff8-9c34e31067d4",
+                                              "itemname": "m",
+                                              "itemquantity": 10,
+                                              "created_at": "2023-10-27T09:42:48.000000Z",
+                                              "updated_at": "2023-10-27T09:42:48.000000Z",
+                                              "deleted_at": null
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "id": "9a77f395-ddee-4fd3-b888-220c669cd9d5",
+                                          "product_id": "9a77f183-5ccc-4cdc-ab4b-d72a2bbef524",
+                                          "color": "olive green",
+                                          "price": 10,
+                                          "final_price": "200",
+                                          "tags": "short tunic",
+                                          "is_available": 1,
+                                          "quantity": 20,
+                                          "ordering": 2,
+                                          "created_at": "2023-10-27T09:43:04.000000Z",
+                                          "updated_at": "2023-10-27T09:43:04.000000Z",
+                                          "deleted_at": null,
+                                          "images": [
+                                            {
+                                              "id": "9a77f395-e25c-4830-88cf-831c8bcd9286",
+                                              "product_item_id": "9a77f395-ddee-4fd3-b888-220c669cd9d5",
+                                              "path": "images/product_media",
+                                              "name": "91698399340.jpg",
+                                              "ordering": 1,
+                                              "type": "Image",
+                                              "created_at": "2023-10-27T09:43:04.000000Z",
+                                              "updated_at": "2023-10-27T09:43:04.000000Z",
+                                              "deleted_at": null
+                                            }
+                                          ],
+                                          "sizes": [
+                                            {
+                                              "id": "9a77f395-e060-4570-9122-23e72fb09593",
+                                              "product_item_id": "9a77f395-ddee-4fd3-b888-220c669cd9d5",
+                                              "itemname": "s",
+                                              "itemquantity": 50,
+                                              "created_at": "2023-10-27T09:43:04.000000Z",
+                                              "updated_at": "2023-10-27T09:43:04.000000Z",
+                                              "deleted_at": null
+                                            },
+                                            {
+                                              "id": "9a77f395-e16b-4dc4-ad31-2b5c0126984e",
+                                              "product_item_id": "9a77f395-ddee-4fd3-b888-220c669cd9d5",
+                                              "itemname": "m",
+                                              "itemquantity": 10,
+                                              "created_at": "2023-10-27T09:43:04.000000Z",
+                                              "updated_at": "2023-10-27T09:43:04.000000Z",
+                                              "deleted_at": null
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
                                 }
                             }
                         }

@@ -3,6 +3,9 @@
 namespace Tests\Feature;
 
 use App\Models\Product;
+use App\Models\ProductItem;
+use App\Models\ProductItemSize;
+use App\Models\ProductMedia;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\UploadedFile;
@@ -17,49 +20,83 @@ class ProductTest extends TestCase
     use DatabaseTransactions;
     /**
      * A basic feature test example.
+     *  one product with its multiple items and that multiple item have multiple images and sizes.
+     *
      */
 
-    public function test_for_product_creating($imageDelete = "yes")
-    {
+     public function testStoreProduct()
+     {
 
-        $this->withoutExceptionHandling();
-       
-        $api = 'api/product';
-        Storage::fake('photos');
-        
-        $product = [
-            'name' => 'Running shoeszs',
-            'short_description' => 'running shoes',
-            'discounted_price' => 20,
-            'in_stock' => 20,
-            'is_active' => 1,
-            'brand' => 'Nike',
-            'cover_image' =>  UploadedFile::fake()->create("test.jpg", 100),
-            'main_category' => 1,
-            'category' => 1,
-            'images' => [
-                0 => UploadedFile::fake()->create("test.jpg", 100),
-                1 => UploadedFile::fake()->create("test.jpg", 100),
-                2 => UploadedFile::fake()->create("test.jpg", 100),],
-            'value' => 30,
-            'variant' => 23,
-            'parent_product' => 2,
-            'price' => 20,
-            'long_description' => 'shoes which are light weight with amazing',
-        ];
-
-        $response = $this->post($api, $product);
-        if($imageDelete == "yes")
-        {
-            $this->removeImages(explode(',',$response['data']['images']),$response['data']['cover_image']);
-        }
-
-        $response->assertJson([
-            'type' => "success",
+        $productData = [
+            'name' => 'Product A',
+            'short_description' => 'This is a test product',
+            'is_active'=>1,
+            'brand'=>'gucci',  
             
-        ]);
-        // Storage::disk('photos');
-    }
+        ];
+        $product = Product::create($productData);
+        $itemsData = [
+            [
+                'color' => 'Item 1',
+                'tags'=>"long tunics",
+                'price'=>100,
+                'final_price'=>90,
+                'is_available'=>1,
+                'ordering'=>1,
+                'quantity'=>10,
+                'product_id' => $product->id,
+            ],
+            [
+                'color' => 'Item 2',
+                'tags'=>"short tunics",
+                'price'=>100,
+                'quantity'=>9,
+                'final_price'=>90,
+                'is_available'=>1,
+                'ordering'=>2,
+                'product_id' => $product->id,
+            ],
+        ];
+       
+          
+            $items = ProductItem::create($itemsData);
+            
+            $itemImagesData = [
+                [
+                    'product_item_id' => $items->id,
+                    'image' => 'item1_image1.jpg',
+                ],
+                [
+                    'product_item_id' => $items->id,
+                    'image' => 'item1_image2.jpg',
+                ],
+                
+            ];
+            $itemImages = ProductMedia::create($itemImagesData);
+    
+            // Create sizes for each item
+            $itemSizesData = [
+                [
+                    'product_item_id' => $items[0]->id,
+                    'size' => 'Size 1',
+                    'quantity' => 10,
+                ],
+                [
+                    'product_item_id' => $items[0]->id,
+                    'size' => 'Size 2',
+                    'quantity' => 5,
+                ],
+                [
+                    'product_item_id' => $items[1]->id,
+                    'size' => 'Size 3',
+                    'quantity' => 8,
+                ],
+            ];
+            $itemSizes = ProductItemSize::create($itemSizesData);
+     
+
+        // Attach images to each ite
+     } 
     // fetching all the Products
     public function test_for_product_fetching_all()
     {

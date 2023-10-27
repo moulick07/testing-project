@@ -54,24 +54,24 @@ class ProductController extends Controller
      * If successful, it commits the transaction and returns a JSON response with the created product.
      * If an error occurs, it rolls back the transaction and returns an error JSON response.
 
- * @OA\Post(
- *   path="/api/product",
- *   operationId="createProduct",
- *   tags={"ProductController"},
- *   summary="Create a new product",
- *   description="Create a new product and its associated product items and sizes.",
- *   @OA\RequestBody(
- *     required=true,
- *     @OA\JsonContent(ref="")
- *   ),
- *   @OA\Response(
- *     response=200,
- *     description="Product created successfully",
- *     @OA\JsonContent(ref="")
- *   ),
- *   security={{ "bearerAuth": {} }}
- * )
- */
+     * @OA\Post(
+     *   path="/api/product",
+     *   operationId="createProduct",
+     *   tags={"ProductController"},
+     *   summary="Create a new product",
+     *   description="Create a new product and its associated product items and sizes.",
+     *   @OA\RequestBody(
+     *     required=true,
+     *     @OA\JsonContent(ref="")
+     *   ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="Product created successfully",
+     *     @OA\JsonContent(ref="")
+     *   ),
+     *   security={{ "bearerAuth": {} }}
+     * )
+     */
 
     public function store(StoreProductRequest $request)
     {
@@ -110,8 +110,8 @@ class ProductController extends Controller
                 }
             }
             DB::commit();
-            $product->load('items', 'items.images', 'items.sizes');
 
+            $this->show($product);
             $response = [
                 'type' => 'success',
                 'code' => 200,
@@ -311,7 +311,6 @@ class ProductController extends Controller
      * It first retrieves all product items related to the given product, deletes them one by one,
      * and then deletes the product itself. It returns a JSON response indicating the success
      * or failure of the operation along with an appropriate message.
-     * 
      * * @OA\Delete(
      *      path="/api/product/{id}",
      *      operationId="deleteProduct",
@@ -350,8 +349,8 @@ class ProductController extends Controller
     {
         try {
             $product_items = ProductItem::where('product_id', $product->id)->get();
-            foreach ($product_items as $key => $value) {
-                $value->delete();
+            foreach ($product_items as $product_item) {
+                $product_item->delete();
             }
             $product->delete();
             $response = [
@@ -371,8 +370,8 @@ class ProductController extends Controller
     }
 
     /**
-     * This code moves images from a temporary folder to a product media folder.
-     * It determines the type of each image (either 'image' or 'video') based on the file extension.
+     * This code moves files from a temporary folder to a product media folder.
+     * It determines the type of each file (either 'image' or 'video') based on the file extension.
      * The code creates the destination folder if it doesn't exist and moves the image to the destination.
      * It then creates a ProductMedia record for each image, storing its name, path, ordering, type, and product item ID.
      *
@@ -408,12 +407,12 @@ class ProductController extends Controller
     /**
      * Deletes the specified images from the product media folder.
      *
-     * @param array $image The array containing the names of the images to be deleted
+     * @param array $images The array containing the names of the images to be deleted
      * @return void
      */
-    public function deleteImage($image)
+    public function deleteImage($images)
     {
-        foreach ($image as $key => $value) {
+        foreach ($images as $value) {
             unlink(public_path('images/product_media/' . $value));
         }
     }
@@ -424,13 +423,14 @@ class ProductController extends Controller
      * @param int $id The ID of the Product.
      * @param \Illuminate\Http\Request $request The HTTP request instance.
      * @return \Illuminate\Http\JsonResponse
-     */
-    public function updateOrder($id, Request $request)
+     
+     */     
+    public function updateOrder($id)
     {
         $data = request()->all();
-        foreach ($data['ordering'] as $product_item) {
+        foreach ($data['ordering'] as $key => $product_item) {
             $product_item_id = $product_item['id'];
-            ProductItem::where('id', $product_item_id)->update(['ordering' => $product_item['order']]);
+            ProductItem::where('id', $product_item_id)->update(['ordering' => $key + 1]);
         }
         $response = [
             'type' => 'success',
@@ -441,4 +441,21 @@ class ProductController extends Controller
         return response()->json($response, 200);
     }
 
+    public function updateImageOrder($id)
+    {
+
+        $data = request()->all();
+        foreach ($data['ordering'] as $key => $product_media) {
+            $product_media_id = $product_media['id'];
+            ProductMedia::where('id', $product_media_id)->update(['ordering' => $key + 1]);
+        }
+        $response = [
+            'type' => 'success',
+            'code' => 200,
+            'message' => 'Ordering updated successfully',
+            'data' => $data // Include the ID in the response
+        ];
+        return response()->json($response, 200);
+
+    }
 }
