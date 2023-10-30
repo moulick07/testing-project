@@ -12,7 +12,6 @@ class UploadPhotoController extends Controller
     public function store(Request $request)
     {
         $input = $request->all();
-
         $files = [];
         $product_image = $input['product_image'];
         foreach ($product_image as $key => $img) {

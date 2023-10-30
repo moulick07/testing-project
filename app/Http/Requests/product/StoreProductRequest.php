@@ -26,12 +26,13 @@ class StoreProductRequest extends FormRequest
     }
     public function rules(): array
     {
+       
         return [
             'name' => 'required|string|max:100',
             'category_id' => 'required',
             'brand' => 'required|max:100',
             'is_active' => 'required|boolean',
-            'product_type' => 'required|',
+            'product_type' => 'required|string',
             'short_description' => 'required|max:150',
             'product_item' => 'required|array',
             'product_item.*.color' => 'required',
