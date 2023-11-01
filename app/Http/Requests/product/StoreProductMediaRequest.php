@@ -24,7 +24,7 @@ class StoreProductMediaRequest extends FormRequest
     public static function rules(): array
     {
         return [
-            // 'image' => 'required|',
+            'image' => 'required|array',
            'image*' => 'required|mimes:png,jpg,jpeg|max:2048',
         ];
 
